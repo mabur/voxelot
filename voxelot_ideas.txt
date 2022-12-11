@@ -1,0 +1,155 @@
+DATA PER VOXEL
+* occupancy
+  - 1bit per voxel
+  - 2^3=8bit=1byte for a cell of 2x2x2=8 voxels
+  - 4^3=64bit=4byte for a cell of 4x4x4=64 voxels
+* surface distance
+  - unsigned integer that can represent largest distance in grid ~3*N,
+    or largest distance to step.
+  - 1byte per voxel.
+* color, optionally for 3-6 directions
+  - 1byte per voxel in Teardown. Palette with 256 colors.
+  - 4byte per voxel for standard colors.
+* gray ambient occlusion, optionally for 3-6 directions
+  - 6x4=24byte per voxel,
+* color global illumination, optionally for 6 directions
+  - 3x6x4=72byte float per voxel
+    72*256^3 = 1.2 GB
+  - Can it be more sparse than geometry?
+    If so, how to handle voxel-clusters that are partially visible,
+    and prevent darkness bleeding?
+
+LEVEL OF DETAIL
+* mipmap
+* building blocks for editor and game logic
+
+EDITOR
+* Build voxel editor and renderer
+  - Or see if I would like to use magica voxel as editor,
+    and focus on rendering.
+* Similar software:
+  - magica voxel
+    - ephtracy.github.io
+    - https://www.patreon.com/magicavoxel
+    - https://github.com/ephtracy
+  - bryce
+  - substance painter
+  - mario maker
+* Define a fixed set of architectural building blocks using cylinders and spheres and boolean operations.
+* Add procedural volumetric texures and noise: dirt, moss...
+* Technology for editor:
+  - SDL and home-made gui-library
+  - SDL & imgui
+  - Dart
+* Do mock-ups of gui to see needs:
+  - 1st iteration
+    - Edit fixed size building block, solid or empty
+    - No need for GUI just basic voxel visualization
+  - 3D viewer/editor for building blocks
+    - Draw solid or empty space.
+    - Carve in 2d views: sides and top
+  - 3D viewer/editor with modes states:
+    - draw selected geometry/block with selected material or empty block
+    - (draw selected material on existing geometry)
+    - (select/view block)
+  - Open file, save file, undo, undo-undo.
+  - Control scene and grid
+    - set resolution
+  - Control rendering settings
+  - View and select building block
+  - View and select material (emissive?)
+  - View and control procedural noise, dirt, moss, ...
+  - View and select illumination / environment
+    - (Point lights), sky, fog, water?
+  - Make custom building block
+  - Make custom material
+  - Make custom procedural noise
+
+RAY TRAVERSAL ACCELERATION
+Ordered by simplicity:
+1. Single grid
+   256x256x64 x72 = 0.3 GB
+   512x512x128 x72 = 2.4 GB
+2. 2 grids: coarse and detailed (mipmaps)
+   - The 2 levels represent the building blocks in the editor.
+3. Fixed set of grids (mipmaps)
+4. Full octree & mipmaps
+   1^3=0 2^3=8 4^3=64 8^3=512 16^3=4096 32^3=32768 64^3=262144
+   128^3=2097152 256^3=16777216 512^3=134217728
+   Handle that game level is typically not cubic.
+5. (Distance field)
+   - Not necessary in the same way as mip-maps are,
+     so could be optional optimization later on.
+   - Mimaps give similar effect anyway, but coarser discretization
+6. Grid with fixed building-blocks for geometry,
+   and sparser grids for illumination.
+7. (Rasterization pass)
+   - Seems ok for rendering image, but might be hard to re-use for tracing global illumination.
+
+TEMPORAL SMOOTHING
+* for global illumination
+* also for raytracing?
+
+ILLUMINATION
+* Ambient occlusion - single/zero "bounces" and gray shade
+* Ambient occlusion against sky is similar to single bounce global illumination
+* Global illumination
+  - Proper - 1 to inf bounces and color channels
+  - Cone tracing
+  - Light propagation volumes
+
+DISTANCE FIELD
+* Represent distance fields with directions somehow, to allow skipping more space?
+* Ray marching using spheres vs cubes. Cube-assisted: A similar technique to sphere-assisted ray marching, the use of cubes and taxicab distance can be used to render voxel volumes.
+
+Dennis Gustafsson - Teardown - Tuxedolabs
+https://blog.voxagon.se/
+https://blog.voxagon.se/2018/10/17/from-screen-space-to-voxel-space.html
+
+NAME
+voxelot
+
+voxel
+volume
+element
+editor
+maker
+builder
+craft
+construct
+engine
+grid
+model
+mold
+sculpt
+motor
+generator
+transform
+blueprint
+prototype
+scheme
+sketch
+map
+design
+render
+compose
+etch
+carve
+form
+illumination
+
+apparat
+maskin
+makapär
+mojäng
+arkitektur
+bygga
+skulptur
+skapa
+hantverk
+rutnät
+karta
+ritning
+skissa
+stråle
+ljus
