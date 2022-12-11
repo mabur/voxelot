@@ -25,16 +25,6 @@ struct Map {
     size_t heightGrid() const { return voxels.height(); }
     size_t depthGrid() const { return voxels.depth(); }
 
-    Vector4d centerInWorld() const{
-        return Vector4d{
-            0.5 * voxel_length * widthGrid(),
-            0.0, // 0.5 * voxel_length * heightGrid(),
-            0.5 * voxel_length * depthGrid(),
-            1.0
-        };
-    }
-
-    int blockIndexX(Vector4d position_world) const;
-    int blockIndexZ(Vector4d position_world) const;
-    Vector4d blockPositionCenter(int z, int y, int x) const;
+    Vector4d centerInWorld() const;
+    Vector4d closestVoxelCenterInWorld(const Vector4d& position_in_world) const;
 };
