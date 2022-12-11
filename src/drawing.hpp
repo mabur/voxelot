@@ -4,10 +4,10 @@
 #include <vector>
 
 #include "color.hpp"
-#include "image.hpp"
+#include "array2.hpp"
 
 struct World;
 
-using Pixels = Image<Color>;
+using Pixels = Array2<Color>;
 
 void drawBuildMode(Pixels& pixels, const World& world);

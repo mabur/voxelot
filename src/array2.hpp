@@ -3,9 +3,9 @@
 #include <valarray>
 
 template<typename T>
-class Image {
+class Array2 {
 public:
-    Image(size_t width, size_t height)
+    Array2(size_t width, size_t height)
         : width_{ width }
         , height_{ height }
         , array_(width * height)
