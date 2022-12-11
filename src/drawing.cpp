@@ -104,9 +104,9 @@ void drawBuildMode(Pixels& pixels, const World& world) {
 
     const auto d = world.map.voxel_length;
     size_t i = 0;
-    for (size_t z = 0; z < world.map.voxels.depth(); ++z) {
-        for (size_t y = 0; y < world.map.voxels.height(); ++y) {
-            for (size_t x = 0; x < world.map.voxels.width(); ++x) {
+    for (size_t z = 0; z < world.map.voxels.depth() + 1; ++z) {
+        for (size_t y = 0; y < world.map.voxels.height() + 1; ++y) {
+            for (size_t x = 0; x < world.map.voxels.width() + 1; ++x) {
                 const auto points = Vectors4d{
                     Vector4d{d * x, d * y, d * z, 1.0}
                 };
