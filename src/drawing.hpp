@@ -4,7 +4,7 @@
 
 #include "color.hpp"
 
-struct Environment;
+struct World;
 
 struct Pixels {
     std::vector<Color> colors;
@@ -16,4 +16,4 @@ struct Pixels {
     void clear();
 };
 
-void drawBuildMode(Pixels& pixels, const Environment& environment);
+void drawBuildMode(Pixels& pixels, const World& world);

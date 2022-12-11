@@ -4,11 +4,11 @@
 #include "map.hpp"
 #include "timer.hpp"
 
-struct Environment {
+struct World {
     CameraIntrinsics intrinsics;
     CameraExtrinsics extrinsics;
     Map map;
     FrequencyTimer timer;
 };
 
-Environment makeEnvironment(size_t screen_width, size_t screen_height);
+World makeWorld(size_t screen_width, size_t screen_height);

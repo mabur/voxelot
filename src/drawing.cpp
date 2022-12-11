@@ -7,10 +7,10 @@
 
 #include "algorithm.hpp"
 #include "color.hpp"
-#include "environment.hpp"
 #include "map.hpp"
 #include "text.hpp"
 #include "vector_space.hpp"
+#include "world.hpp"
 
 Pixels::Pixels(int width, int height)
     : width(width)
@@ -49,8 +49,8 @@ void drawString(
     }
 }
 
-void drawFrameFrequency(Pixels& pixels, const Environment& environment) {
-    const auto time = std::to_string(environment.timer.frequency()) + "Hz";
+void drawFrameFrequency(Pixels& pixels, const World& world) {
+    const auto time = std::to_string(world.timer.frequency()) + "Hz";
     const auto x = pixels.width - 8 * 5;
     const auto y = pixels.height - 16;
     drawString(pixels, time, x, y, WHITE);
@@ -79,9 +79,9 @@ Vector4d cameraViewPosition(const CameraExtrinsics& extrinsics) {
     return worldFromCamera(extrinsics) * Vector4d { 0, 0, 2 * L, 1 };
 }
 
-Vectors4d activeBlockMesh(const Environment& environment) {
-    const auto& map = environment.map;
-    const auto camera_view_position = cameraViewPosition(environment.extrinsics);
+Vectors4d activeBlockMesh(const World& world) {
+    const auto& map = world.map;
+    const auto camera_view_position = cameraViewPosition(world.extrinsics);
     const auto xi = map.blockIndexX(camera_view_position);
     const auto zi = map.blockIndexZ(camera_view_position);
     const auto block_center = map.blockPositionCenter(zi, 0, xi);
@@ -98,16 +98,16 @@ Vectors4d activeBlockMesh(const Environment& environment) {
     };
 }
 
-void drawBuildMode(Pixels& pixels, const Environment& environment) {
+void drawBuildMode(Pixels& pixels, const World& world) {
     static Vectors4d positions_world;
     static Vectors4d positions_image;
 
     positions_world.clear();
     positions_image.clear();
-    positions_world = activeBlockMesh(environment);
+    positions_world = activeBlockMesh(world);
     
     const auto image_from_world = imageFromWorld(
-        environment.intrinsics, environment.extrinsics
+        world.intrinsics, world.extrinsics
     );
     for (const auto& position_world : positions_world) {
         const auto position_image = (image_from_world * position_world).eval(); 
@@ -116,5 +116,5 @@ void drawBuildMode(Pixels& pixels, const Environment& environment) {
     for (const auto& p : positions_image) {
         drawPoint(pixels, p, GREEN);
     }
-    drawFrameFrequency(pixels, environment);
+    drawFrameFrequency(pixels, world);
 }

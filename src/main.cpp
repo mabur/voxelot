@@ -3,7 +3,7 @@
 #include "camera.hpp"
 #include "drawing.hpp"
 #include "sdl_wrappers.hpp"
-#include "environment.hpp"
+#include "world.hpp"
 
 const auto velocity = 0.05;
 const auto angular_velocity = 0.1 * 3.14 / 180.0;
@@ -43,8 +43,8 @@ CameraExtrinsics rotate(CameraExtrinsics extrinsics, const Input& input) {
     return extrinsics;
 }
 
-void updateCameraBuildMode(Environment& environment, const Input& input) {
-    auto& extrinsics = environment.extrinsics;
+void updateCameraBuildMode(World& world, const Input& input) {
+    auto& extrinsics = world.extrinsics;
     const auto velocity_in_world = velocityInWorld(input, extrinsics);
     extrinsics.x += velocity_in_world.x();
     extrinsics.y += velocity_in_world.y();
@@ -61,17 +61,17 @@ int main(int, char**)
     auto pixels = Pixels(WIDTH, HEIGHT);
     auto sdl = Sdl(WINDOW_TITLE, WIDTH, HEIGHT);
 
-    Environment environment = makeEnvironment(sdl.width, sdl.height);
+    World world = makeWorld(sdl.width, sdl.height);
 
     while (sdl.noQuitMessage()) {
         const auto input = sdl.getInput();
         if (input.escape_button == ButtonState::CLICKED) {
             return 0;
         }
-        environment.timer.update();
-        updateCameraBuildMode(environment, input);
+        world.timer.update();
+        updateCameraBuildMode(world, input);
         pixels.clear();
-        drawBuildMode(pixels, environment);
+        drawBuildMode(pixels, world);
         sdl.draw(pixels.colors.data());
 
     }
