@@ -61,6 +61,7 @@ EDITOR
   - View and control procedural noise, dirt, moss, ...
   - View and select illumination / environment
     - (Point lights), sky, fog, water?
+    - Procedural sky model?
   - Make custom building block
   - Make custom material
   - Make custom procedural noise
