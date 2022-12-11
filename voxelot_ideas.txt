@@ -109,6 +109,11 @@ https://blog.voxagon.se/2018/10/17/from-screen-space-to-voxel-space.html
 
 NAME
 voxelot
+voxebra
+voxzone
+voxzoo
+voxoom
+voxzoom
 
 voxel
 volume
