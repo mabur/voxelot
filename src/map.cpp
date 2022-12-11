@@ -9,9 +9,7 @@ T clamp(T x, T low, T high) {
 
 Map::Map()
 {
-    blocks = std::vector<std::vector<int>>(
-        MAP_SIZE, std::vector<int>(MAP_SIZE, 0)
-    );
+    voxels = Array3<int>(MAP_SIZE, MAP_SIZE, MAP_SIZE, 0);
 }
 
 int Map::blockIndexX(Vector4d position_world) const {

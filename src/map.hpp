@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "array3.hpp"
 #include "vector_space.hpp"
 
 const auto L = 1.0;
@@ -18,7 +19,7 @@ inline int roundDoubleToInt(double x) {
 // y up
 // z backward
 struct Map {
-    std::vector<std::vector<int>> blocks;
+    Array3<int> voxels;
 
     Map();
 
