@@ -12,30 +12,14 @@
 #include "vector_space.hpp"
 #include "world.hpp"
 
-Pixels::Pixels(int width, int height)
-    : width(width)
-    , height(height)
-    , colors(width* height)
-{}
-
-size_t Pixels::size() const {
-    return width * height;
-}
-
-void Pixels::clear() {
-    fill(colors, 0);
-}
-
 void drawCharacter(
     Pixels& pixels, char character, size_t x_start, size_t y_start, Color color
 ) {
-    const auto W = pixels.width;
-    const auto H = pixels.height;
     const auto& digit_bitmap = text_bitmaps::get(character);
     for (size_t y = 0; y < 8; ++y) {
         for (size_t x = 0; x < 8; ++x) {
             if (digit_bitmap[y * 8 + x]) {
-                pixels.colors.at((y_start + y) * W + x_start + x) = color;
+                pixels(x_start + x, y_start + y) = color;
             }
         }
     }
@@ -51,8 +35,8 @@ void drawString(
 
 void drawFrameFrequency(Pixels& pixels, const World& world) {
     const auto time = std::to_string(world.timer.frequency()) + "Hz";
-    const auto x = pixels.width - 8 * 5;
-    const auto y = pixels.height - 16;
+    const auto x = pixels.width() - 8 * 5;
+    const auto y = pixels.height() - 16;
     drawString(pixels, time, x, y, WHITE);
 }
 
@@ -62,8 +46,8 @@ bool isBehindCamera(const Vector4d& v)
 }
 
 void drawPoint(Pixels& pixels, Vector4d position_image, Color color) {
-    const auto width = pixels.width;
-    const auto height = pixels.height;
+    const auto width = pixels.width();
+    const auto height = pixels.height();
     if (isBehindCamera(position_image)) {
         return;
     }
@@ -72,7 +56,7 @@ void drawPoint(Pixels& pixels, Vector4d position_image, Color color) {
     if (x < 0 || width <= x || y < 0 || height <= y) {
         return;
     }
-    pixels.colors.at(y * width + x) = color;
+    pixels(x, y) = color;
 }
 
 Vector4d cameraViewPosition(const CameraExtrinsics& extrinsics) {

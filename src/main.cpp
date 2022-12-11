@@ -1,5 +1,6 @@
 #define SDL_MAIN_HANDLED
 
+#include "algorithm.hpp"
 #include "camera.hpp"
 #include "drawing.hpp"
 #include "sdl_wrappers.hpp"
@@ -70,9 +71,9 @@ int main(int, char**)
         }
         world.timer.update();
         updateCameraBuildMode(world, input);
-        pixels.clear();
+        fill(pixels, BLACK);
         drawBuildMode(pixels, world);
-        sdl.draw(pixels.colors.data());
+        sdl.draw(pixels.data());
 
     }
     return 0;
