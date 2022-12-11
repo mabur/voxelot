@@ -14,12 +14,12 @@ CameraIntrinsics makeCameraIntrinsics(size_t width, size_t height)
     return intrinsics;
 }
 
-CameraExtrinsics makeCameraExtrinsics()
+CameraExtrinsics makeCameraExtrinsics(double x, double y, double z)
 {
     auto extrinsics = CameraExtrinsics{};
-    extrinsics.x = 0.0;
-    extrinsics.y = 0.0;
-    extrinsics.z = 0.0;
+    extrinsics.x = x;
+    extrinsics.y = y;
+    extrinsics.z = z;
     extrinsics.yaw = 0.0;
     extrinsics.pitch = 0.0;
     return extrinsics;

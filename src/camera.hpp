@@ -22,7 +22,7 @@ struct CameraExtrinsics
 };
 
 CameraIntrinsics makeCameraIntrinsics(size_t width, size_t height);
-CameraExtrinsics makeCameraExtrinsics();
+CameraExtrinsics makeCameraExtrinsics(double x, double y, double z);
 
 Matrix4d worldFromCamera(const CameraExtrinsics& coordinates);
 
