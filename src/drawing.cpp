@@ -84,23 +84,22 @@ Vectors4d activeBlockMesh(const World& world) {
     return getCubeCorners(block_center, map.voxel_length);
 }
 
-void drawBuildMode(Pixels& pixels, const World& world) {
-    static Vectors4d positions_world;
-    static Vectors4d positions_image;
+void drawPoints(
+    Pixels& pixels,
+    const Matrix4d& image_from_world,
+    const Vectors4d& positions_in_world
+) {
+    for (const auto& position_world : positions_in_world) {
+        const auto position_image = (image_from_world * position_world).eval();
+        const auto p = position_image / position_image(3);
+        drawPoint(pixels, p, GREEN);
+    }
+}
 
-    positions_world.clear();
-    positions_image.clear();
-    positions_world = activeBlockMesh(world);
-    
+void drawBuildMode(Pixels& pixels, const World& world) {
     const auto image_from_world = imageFromWorld(
         world.intrinsics, world.extrinsics
     );
-    for (const auto& position_world : positions_world) {
-        const auto position_image = (image_from_world * position_world).eval(); 
-        positions_image.push_back(position_image / position_image(3));
-    }
-    for (const auto& p : positions_image) {
-        drawPoint(pixels, p, GREEN);
-    }
+    drawPoints(pixels, image_from_world, activeBlockMesh(world));
     drawFrameFrequency(pixels, world);
 }
