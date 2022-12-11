@@ -7,8 +7,6 @@
 #include "array3.hpp"
 #include "vector_space.hpp"
 
-const auto L = 1.0;
-
 const auto MAP_SIZE = 64;
 
 inline int roundDoubleToInt(double x) {
@@ -20,6 +18,7 @@ inline int roundDoubleToInt(double x) {
 // z backward
 struct Map {
     Array3<int> voxels;
+    double voxel_length = 1.0;
 
     Map();
 

@@ -14,14 +14,14 @@ Map::Map()
 
 int Map::blockIndexX(Vector4d position_world) const {
     const auto z = blockIndexZ(position_world);
-    const auto x = roundDoubleToInt(position_world.x() / L);
+    const auto x = roundDoubleToInt(position_world.x() / voxel_length);
     return clamp(x, 0, MAP_SIZE - 1);
 }
 int Map::blockIndexZ(Vector4d position_world) const {
-    const auto z = roundDoubleToInt(position_world.z() / L);
+    const auto z = roundDoubleToInt(position_world.z() / voxel_length);
     return clamp(z, 0, MAP_SIZE - 1);
 }
 
 Vector4d Map::blockPositionCenter(int z, int y, int x) const {
-    return Vector4d{ x * L, y * L, z * L, 1.0 };
+    return Vector4d{ x * voxel_length, y * voxel_length, z * voxel_length, 1.0 };
 }

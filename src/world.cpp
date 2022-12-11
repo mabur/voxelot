@@ -5,9 +5,9 @@ World makeWorld(size_t screen_width, size_t screen_height) {
     world.map = Map{};
     world.intrinsics = makeCameraIntrinsics(screen_width, screen_height);
     world.extrinsics = makeCameraExtrinsics(
-        0.5 * L * MAP_SIZE,
+        0.5 * world.map.voxel_length * MAP_SIZE,
         0,
-        0.5 * L * MAP_SIZE
+        0.5 * world.map.voxel_length * MAP_SIZE
     );
     return world;
 }
