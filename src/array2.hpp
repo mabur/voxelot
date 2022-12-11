@@ -21,6 +21,7 @@ public:
     size_t size() const { return width_ * height_; }
 
     T& operator()(size_t x, size_t y) {return array_[y * width_ + x];}
+    T operator()(size_t x, size_t y) const {return array_[y * width_ + x];}
 
     T* data() { return std::begin(array_); }
     const T* data() const { return std::begin(array_); }
