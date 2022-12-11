@@ -5,7 +5,6 @@
 #include "timer.hpp"
 
 struct Environment {
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     CameraIntrinsics intrinsics;
     CameraExtrinsics extrinsics;
     Map map;
