@@ -59,25 +59,29 @@ void drawPoint(Pixels& pixels, Vector4d position_image, Color color) {
     pixels(x, y) = color;
 }
 
+Vectors4d getCubeCorners(const Vector4d& center, double side) {
+    const auto d = 0.5 * side;
+    return {
+        center + Vector4d{ -d, -d, +d, 0 },
+        center + Vector4d{ +d, -d, +d, 0 },
+        center + Vector4d{ +d, +d, +d, 0 },
+        center + Vector4d{ -d, +d, +d, 0 },
+        center + Vector4d{ -d, -d, -d, 0 },
+        center + Vector4d{ +d, -d, -d, 0 },
+        center + Vector4d{ +d, +d, -d, 0 },
+        center + Vector4d{ -d, +d, -d, 0 },
+    };
+}
+
 Vectors4d activeBlockMesh(const World& world) {
     const auto& map = world.map;
     const auto camera_view_position = 
         (worldFromCamera(world.extrinsics) *
-        Vector4d { 0, 0, 2 * world.map.voxel_length, 1 }).eval();
+        Vector4d { 0, 0, 2 * map.voxel_length, 1 }).eval();
     const auto block_center = map.closestVoxelCenterInWorld(
         camera_view_position
     );
-    const auto d = 0.5 * world.map.voxel_length;
-    return {
-        block_center + Vector4d{ -d, -d, +d, 0 },
-        block_center + Vector4d{ +d, -d, +d, 0 },
-        block_center + Vector4d{ +d, +d, +d, 0 },
-        block_center + Vector4d{ -d, +d, +d, 0 },
-        block_center + Vector4d{ -d, -d, -d, 0 },
-        block_center + Vector4d{ +d, -d, -d, 0 },
-        block_center + Vector4d{ +d, +d, -d, 0 },
-        block_center + Vector4d{ -d, +d, -d, 0 },
-    };
+    return getCubeCorners(block_center, map.voxel_length);
 }
 
 void drawBuildMode(Pixels& pixels, const World& world) {
