@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "color.hpp"
-#include "Image.hpp"
+#include "image.hpp"
 
 struct World;
 
