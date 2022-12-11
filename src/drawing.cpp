@@ -87,12 +87,13 @@ Vectors4d activeBlockMesh(const World& world) {
 void drawPoints(
     Pixels& pixels,
     const Matrix4d& image_from_world,
-    const Vectors4d& positions_in_world
+    const Vectors4d& positions_in_world,
+    Color color
 ) {
     for (const auto& position_world : positions_in_world) {
         const auto position_image = (image_from_world * position_world).eval();
         const auto p = position_image / position_image(3);
-        drawPoint(pixels, p, GREEN);
+        drawPoint(pixels, p, color);
     }
 }
 
@@ -100,6 +101,21 @@ void drawBuildMode(Pixels& pixels, const World& world) {
     const auto image_from_world = imageFromWorld(
         world.intrinsics, world.extrinsics
     );
-    drawPoints(pixels, image_from_world, activeBlockMesh(world));
+
+    const auto d = world.map.voxel_length;
+    size_t i = 0;
+    for (size_t z = 0; z < world.map.voxels.depth(); ++z) {
+        for (size_t y = 0; y < world.map.voxels.height(); ++y) {
+            for (size_t x = 0; x < world.map.voxels.width(); ++x) {
+                const auto points = Vectors4d{
+                    Vector4d{d * x, d * y, d * z, 1.0}
+                };
+                drawPoints(pixels, image_from_world, points, GRAY);
+                ++i;
+            }
+        }
+    }
+
+    drawPoints(pixels, image_from_world, activeBlockMesh(world), GREEN);
     drawFrameFrequency(pixels, world);
 }
