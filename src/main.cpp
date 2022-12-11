@@ -59,7 +59,7 @@ int main(int, char**)
     const auto WIDTH = 320;
     const auto HEIGHT = 200;
 
-    auto pixels = Pixels(WIDTH, HEIGHT);
+    auto pixels = Pixels(WIDTH, HEIGHT, BLACK);
     auto sdl = Sdl(WINDOW_TITLE, WIDTH, HEIGHT);
 
     World world = makeWorld(sdl.width, sdl.height);

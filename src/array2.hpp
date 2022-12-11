@@ -5,10 +5,15 @@
 template<typename T>
 class Array2 {
 public:
-    Array2(size_t width, size_t height)
+    Array2()
+        : width_{0}
+        , height_{0}
+        , array_(0)
+    {}
+    Array2(size_t width, size_t height, T value)
         : width_{ width }
         , height_{ height }
-        , array_(width * height)
+        , array_(value, width * height)
     {}
 
     size_t width() const { return width_; }
