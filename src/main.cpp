@@ -46,10 +46,9 @@ CameraExtrinsics rotate(CameraExtrinsics extrinsics, const Input& input) {
 void updateCameraBuildMode(Environment& environment, const Input& input) {
     auto& extrinsics = environment.extrinsics;
     const auto velocity_in_world = velocityInWorld(input, extrinsics);
-    const auto camera_in_world = cameraInWorld(extrinsics);
-    const auto new_camera_in_world = camera_in_world + velocity_in_world;
-    extrinsics.x = new_camera_in_world.x();
-    extrinsics.z = new_camera_in_world.z();
+    extrinsics.x += velocity_in_world.x();
+    extrinsics.y += velocity_in_world.y();
+    extrinsics.z += velocity_in_world.z();
     extrinsics = rotate(extrinsics, input);
 }
 

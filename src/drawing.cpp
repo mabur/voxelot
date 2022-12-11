@@ -75,6 +75,10 @@ void drawPoint(Pixels& pixels, Vector4d position_image, Color color) {
     pixels.colors.at(y * width + x) = color;
 }
 
+Vector4d cameraViewPosition(const CameraExtrinsics& extrinsics) {
+    return worldFromCamera(extrinsics) * Vector4d { 0, 0, 2 * L, 1 };
+}
+
 Vectors4d activeBlockMesh(const Environment& environment) {
     const auto& map = environment.map;
     const auto camera_view_position = cameraViewPosition(environment.extrinsics);
@@ -94,12 +98,6 @@ Vectors4d activeBlockMesh(const Environment& environment) {
     };
 }
 
-Matrix4d imageFromWorld(const Environment& environment) {
-    const auto image_from_camera = imageFromCamera(environment.intrinsics);
-    const auto camera_from_world = cameraFromWorld(environment.extrinsics);
-    return image_from_camera * camera_from_world;
-}
-
 void drawBuildMode(Pixels& pixels, const Environment& environment) {
     static Vectors4d positions_world;
     static Vectors4d positions_image;
@@ -108,8 +106,9 @@ void drawBuildMode(Pixels& pixels, const Environment& environment) {
     positions_image.clear();
     positions_world = activeBlockMesh(environment);
     
-    const auto image_from_world = imageFromWorld(environment);
-
+    const auto image_from_world = imageFromWorld(
+        environment.intrinsics, environment.extrinsics
+    );
     for (const auto& position_world : positions_world) {
         const auto position_image = (image_from_world * position_world).eval(); 
         positions_image.push_back(position_image / position_image(3));

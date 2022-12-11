@@ -14,7 +14,6 @@ struct Environment {
     CameraIntrinsics intrinsics;
     CameraExtrinsics extrinsics;
     Map map;
-    Vector4d position_start;
     FrequencyTimer timer;
 };
 

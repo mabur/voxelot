@@ -2,6 +2,29 @@
 
 #include <Eigen/Geometry>
 
+CameraIntrinsics makeCameraIntrinsics(size_t width, size_t height)
+{
+    auto intrinsics = CameraIntrinsics{};
+    intrinsics.fx = 0.5 * height;
+    intrinsics.fy = 0.5 * height;
+    intrinsics.cx = 0.5 * width;
+    intrinsics.cy = 0.5 * height;
+    intrinsics.width = width;
+    intrinsics.height = height;
+    return intrinsics;
+}
+
+CameraExtrinsics makeCameraExtrinsics()
+{
+    auto extrinsics = CameraExtrinsics{};
+    extrinsics.x = 0.0;
+    extrinsics.y = 0.0;
+    extrinsics.z = 0.0;
+    extrinsics.yaw = 0.0;
+    extrinsics.pitch = 0.0;
+    return extrinsics;
+}
+
 Matrix4d worldFromCamera(const CameraExtrinsics& coordinates)
 {
     auto world_from_camera = Matrix4d{Matrix4d::Identity()};
@@ -16,11 +39,6 @@ Matrix4d worldFromCamera(const CameraExtrinsics& coordinates)
     return world_from_camera;
 }
 
-Matrix4d cameraFromWorld(const CameraExtrinsics& coordinates)
-{
-    return worldFromCamera(coordinates).inverse();
-}
-
 Matrix4d imageFromCamera(const CameraIntrinsics& c)
 {
     auto image_from_camera = Matrix4d{};
@@ -32,18 +50,9 @@ Matrix4d imageFromCamera(const CameraIntrinsics& c)
     return image_from_camera;
 }
 
-CameraIntrinsics makeCameraIntrinsics(size_t width, size_t height)
-{
-    auto intrinsics = CameraIntrinsics{};
-    intrinsics.fx = 0.5 * height;
-    intrinsics.fy = 0.5 * height;
-    intrinsics.cx = 0.5 * width;
-    intrinsics.cy = 0.5 * height;
-    intrinsics.width = width;
-    intrinsics.height = height;
-    return intrinsics;
-}
-
-Vector4d cameraInWorld(const CameraExtrinsics& coordinates) {
-    return { coordinates.x, coordinates.y, coordinates.z, 1 };
+Matrix4d imageFromWorld(
+    const CameraIntrinsics& intrinsics,
+    const CameraExtrinsics& extrinsics
+) {
+    return imageFromCamera(intrinsics) * worldFromCamera(extrinsics).inverse();
 }
