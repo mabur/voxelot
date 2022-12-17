@@ -13,7 +13,8 @@ size_t roundDoubleToSize(double x) {
 
 Map::Map() {
     voxels = Array3<int>(MAP_SIZE, MAP_SIZE, MAP_SIZE, 0);
-    voxels(2, 2, 2) = 1;
+    voxels(0, 0, 0) = 1;
+    voxels(0, 2, 0) = 1;
 }
 
 Matrix4d Map::worldFromGrid() const {
