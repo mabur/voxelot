@@ -116,7 +116,7 @@ Vector4d normalizeDirection(const Vector4d& v) {
     return v / v.norm();
 }
 
-void rayCastVoxelsPreciseX(Pixels& pixels, const World& world) {
+void rayCastVoxelsPrecise(Pixels& pixels, const World& world) {
     const auto& voxels = world.map.voxels;
 
     const auto image_width = static_cast<double>(pixels.width());
@@ -145,17 +145,58 @@ void rayCastVoxelsPreciseX(Pixels& pixels, const World& world) {
             // When taking unit steps along x grid:
             if (direction_in_grid.x() == 0) continue;
             const Vector4d dx = direction_in_grid / std::abs(direction_in_grid.x());
-            const double tx = direction_in_grid.x() > 0
+            const Vector4d dy = direction_in_grid / std::abs(direction_in_grid.y());
+            const Vector4d dz = direction_in_grid / std::abs(direction_in_grid.z());
+
+            const double start_offset_x = direction_in_grid.x() > 0
                 ? std::floor(p_in_grid.x()) - p_in_grid.x()
                 : p_in_grid.x() - std::ceil(p_in_grid.x());
-            Vector4d px = p_in_grid + tx * dx;
+            const double start_offset_y = direction_in_grid.y() > 0
+                ? std::floor(p_in_grid.y()) - p_in_grid.y()
+                : p_in_grid.y() - std::ceil(p_in_grid.y());
+            const double start_offset_z = direction_in_grid.z() > 0
+                ? std::floor(p_in_grid.z()) - p_in_grid.z()
+                : p_in_grid.z() - std::ceil(p_in_grid.z());
+
+            Vector4d px = p_in_grid + start_offset_x * dx;
+            Vector4d py = p_in_grid + start_offset_y * dy;
+            Vector4d pz = p_in_grid + start_offset_z * dz;
+
+            double tx = start_offset_x * dx.norm();
+            double ty = start_offset_y * dy.norm();
+            double tz = start_offset_z * dz.norm();
 
             for (;;) {
-                auto xg = std::floor(px.x());
-                auto yg = std::floor(px.y());
-                auto zg = std::floor(px.z());
-                if (direction_in_grid.x() < 0) xg--;
-                px += dx;
+                auto xg = 0.0;
+                auto yg = 0.0;
+                auto zg = 0.0;
+                if (tx <= ty && tx <= tz) {
+                    xg = std::floor(px.x());
+                    yg = std::floor(px.y());
+                    zg = std::floor(px.z());
+                    if (direction_in_grid.x() < 0) xg--;
+                    px += dx;
+                    tx += dx.norm();
+                }
+                else if (ty <= tx && ty <= tz) {
+                    xg = std::floor(py.x());
+                    yg = std::floor(py.y());
+                    zg = std::floor(py.z());
+                    if (direction_in_grid.y() < 0) yg--;
+                    py += dy;
+                    ty += dy.norm();
+                }
+                else if (tz <= tx && tz <= ty) {
+                    xg = std::floor(pz.x());
+                    yg = std::floor(pz.y());
+                    zg = std::floor(pz.z());
+                    if (direction_in_grid.z() < 0) zg--;
+                    pz += dz;
+                    tz += dz.norm();
+                }
+                else {
+                    throw;
+                }
 
                 if (direction_in_grid.x() < 0 && xg < 0) break;
                 if (direction_in_grid.y() < 0 && yg < 0) break;
@@ -241,7 +282,7 @@ void draw(Pixels& pixels, const World& world) {
     fill(pixels, BLACK);
 
     // rayCastVoxels(pixels, world);
-    rayCastVoxelsPreciseX(pixels, world);
+    rayCastVoxelsPrecise(pixels, world);
 
     const auto image_from_world = imageFromWorld(
         world.intrinsics, world.extrinsics
