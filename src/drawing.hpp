@@ -10,4 +10,4 @@ struct World;
 
 using Pixels = Array2<Color>;
 
-void drawBuildMode(Pixels& pixels, const World& world);
+void draw(Pixels& pixels, const World& world);

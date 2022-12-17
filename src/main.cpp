@@ -44,7 +44,7 @@ CameraExtrinsics rotate(CameraExtrinsics extrinsics, const Input& input) {
     return extrinsics;
 }
 
-void updateCameraBuildMode(World& world, const Input& input) {
+void updateCamera(World& world, const Input& input) {
     auto& extrinsics = world.extrinsics;
     const auto velocity_in_world = velocityInWorld(input, extrinsics);
     extrinsics.x += velocity_in_world.x();
@@ -70,9 +70,9 @@ int main(int, char**)
             return 0;
         }
         world.timer.update();
-        updateCameraBuildMode(world, input);
+        updateCamera(world, input);
         fill(pixels, BLACK);
-        drawBuildMode(pixels, world);
+        draw(pixels, world);
         sdl.draw(pixels.data());
 
     }

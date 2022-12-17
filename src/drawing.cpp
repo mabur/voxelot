@@ -97,7 +97,7 @@ void drawPoints(
     }
 }
 
-void drawBuildMode(Pixels& pixels, const World& world) {
+void draw(Pixels& pixels, const World& world) {
     const auto image_from_world = imageFromWorld(
         world.intrinsics, world.extrinsics
     );
