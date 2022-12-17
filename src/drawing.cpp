@@ -140,17 +140,20 @@ void rayCastVoxelsPreciseX(Pixels& pixels, const World& world) {
             const auto p_in_grid = normalizePosition(
                 grid_from_image * Vector4d{ x, y, 1, 1 }
             );
-            const auto direction = (p_in_grid - camera_in_grid).eval();
+            const auto direction_in_grid = (p_in_grid - camera_in_grid).eval();
 
             // When taking steps of 1 along x grid:
-            Vector4d dx = direction / direction.x();
+            Vector4d dx = direction_in_grid / direction_in_grid.x();
             Vector4d px = p_in_grid - (p_in_grid.x() - std::floor(p_in_grid.x())) * dx;            
 
             const auto num_steps = 100;
             for (auto i = 0; i < num_steps; ++i, px += dx) {
-                const auto xg = std::floor(px.x());
-                const auto yg = std::floor(px.y());
-                const auto zg = std::floor(px.z());
+                auto xg = std::floor(px.x());
+                auto yg = std::floor(px.y());
+                auto zg = std::floor(px.z());
+                if (direction_in_grid.x() < 0) {
+                    xg--;
+                }
                 if (0 <= xg && xg <= grid_width - 1 &&
                     0 <= yg && yg <= grid_height - 1 &&
                     0 <= zg && zg <= grid_depth - 1) {
