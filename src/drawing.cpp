@@ -154,7 +154,7 @@ void rayCastVoxelsPreciseX(Pixels& pixels, const World& world) {
                 auto xg = std::floor(px.x());
                 auto yg = std::floor(px.y());
                 auto zg = std::floor(px.z());
-                //if (direction_in_grid.x() < 0) xg--;
+                if (direction_in_grid.x() < 0) xg--;
 
                 if (direction_in_grid.x() < 0 && xg < 0) break;
                 if (direction_in_grid.y() < 0 && yg < 0) break;
