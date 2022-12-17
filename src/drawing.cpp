@@ -137,10 +137,10 @@ void rayCastVoxelsPreciseX(Pixels& pixels, const World& world) {
     });
     for (auto y = 0.0; y < image_height; ++y) {
         for (auto x = 0.0; x < image_width; ++x) {
-            const auto p_in_grid = normalizePosition(
+            Vector4d p_in_grid = normalizePosition(
                 grid_from_image * Vector4d{ x, y, 1, 1 }
             );
-            const auto direction_in_grid = (p_in_grid - camera_in_grid).eval();
+            Vector4d direction_in_grid = p_in_grid - camera_in_grid;
 
             // When taking steps of 1 along x grid:
             Vector4d dx = direction_in_grid / direction_in_grid.x();
