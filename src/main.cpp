@@ -77,7 +77,6 @@ int main(int, char**)
         }
         world.timer.update();
         updateCamera(world, input);
-        fill(pixels, BLACK);
         draw(pixels, world);
         sdl.draw(pixels.data());
 

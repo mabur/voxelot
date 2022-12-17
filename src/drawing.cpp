@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <string>
 
-#include <Eigen/Core>
+#include <Eigen/Geometry>
 
 #include "algorithm.hpp"
 #include "color.hpp"
@@ -11,6 +11,8 @@
 #include "text.hpp"
 #include "vector_space.hpp"
 #include "world.hpp"
+
+namespace {
 
 void drawCharacter(
     Pixels& pixels, char character, size_t x_start, size_t y_start, Color color
@@ -97,7 +99,83 @@ void drawPoints(
     }
 }
 
+Matrix4d gridFromImage(const World& world) {
+    const auto image_from_world = imageFromWorld(
+        world.intrinsics, world.extrinsics
+    );
+    const auto world_from_grid = world.map.worldFromGrid();
+    const auto image_from_grid = image_from_world * world_from_grid;
+    return image_from_grid.inverse();
+}
+
+Vector4d normalizePosition(const Vector4d& v) {
+    return v / v.w();
+}
+
+Vector4d normalizeDirection(const Vector4d& v) {
+    return v / v.norm();
+}
+
+void rayCastVoxels(Pixels& pixels, const World& world) {
+    const auto& voxels = world.map.voxels;
+
+    const auto image_width = static_cast<double>(pixels.width());
+    const auto image_height = static_cast<double>(pixels.height());
+
+    const auto grid_width = static_cast<double>(voxels.width());
+    const auto grid_height = static_cast<double>(voxels.height());
+    const auto grid_depth = static_cast<double>(voxels.depth());
+
+    const auto grid_from_image = gridFromImage(world);
+    const auto step_length = 0.1;
+    const auto num_steps = 100;
+
+    const auto grid_from_world = world.map.gridFromWorld();
+    const auto camera_in_grid = normalizePosition(
+        grid_from_world * Vector4d{
+        world.extrinsics.x,
+        world.extrinsics.y,
+        world.extrinsics.z,
+        1.0
+    });
+
+    for (auto y = 0.0; y < image_height; ++y) {
+        for (auto x = 0.0; x < image_width; ++x) {
+            auto p_in_grid = normalizePosition(
+                grid_from_image * Vector4d{x, y, 1, 1}
+            );
+            const auto offset = step_length * normalizeDirection(
+                p_in_grid - camera_in_grid
+            );
+            for (auto i = 0; i < num_steps; ++i, p_in_grid += offset) {
+                const auto xg = std::floor(p_in_grid.x());
+                const auto yg = std::floor(p_in_grid.y());
+                const auto zg = std::floor(p_in_grid.z());
+                if (0 <= xg && xg <= grid_width - 1 &&
+                    0 <= yg && yg <= grid_height - 1 &&
+                    0 <= zg && zg <= grid_depth - 1) {
+                    const auto xgi = static_cast<size_t>(xg);
+                    const auto ygi = static_cast<size_t>(yg);
+                    const auto zgi = static_cast<size_t>(zg);
+                    if (voxels(xgi, ygi, zgi)) {
+                        const auto xi = static_cast<size_t>(x);
+                        const auto yi = static_cast<size_t>(y);
+                        pixels(xi, yi) = RED;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
+}; // namespace
+
 void draw(Pixels& pixels, const World& world) {
+    fill(pixels, BLACK);
+
+    rayCastVoxels(pixels, world);
+
     const auto image_from_world = imageFromWorld(
         world.intrinsics, world.extrinsics
     );

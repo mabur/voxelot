@@ -16,6 +16,12 @@ inline int roundDoubleToInt(double x) {
 // x right
 // y up
 // z backward
+//
+// One corner of the Voxel volume is in the origin.
+// The (x,y,z) indices of a voxel correspond to the coordinates of
+// the corner that is closest to the origin,
+// in the grid coordinate system.
+// The world coordinate system has the same origin but different scale.
 struct Map {
     Array3<int> voxels;
     double voxel_length = 1.0;
