@@ -7,7 +7,7 @@
 #include "array3.hpp"
 #include "vector_space.hpp"
 
-const auto MAP_SIZE = 3;
+const auto MAP_SIZE = 5;
 
 inline int roundDoubleToInt(double x) {
     return static_cast<int>(std::round(x));
