@@ -41,6 +41,7 @@ EDITOR
   - SDL and home-made gui-library
   - SDL & imgui
   - Dart
+* https://color.adobe.com/create/color-wheel
 * Do mock-ups of gui to see needs:
   - 1st iteration
     - Edit fixed size building block, solid or empty
