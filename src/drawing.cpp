@@ -144,9 +144,9 @@ void rayCastVoxelsPreciseX(Pixels& pixels, const World& world) {
 
             // When taking steps of 1 along x grid:
             Vector4d dx = direction_in_grid / direction_in_grid.x();
-            Vector4d px = p_in_grid - (p_in_grid.x() - std::floor(p_in_grid.x())) * dx;            
+            Vector4d px = p_in_grid - (p_in_grid.x() - std::floor(p_in_grid.x())) * dx;
 
-            const auto num_steps = 100;
+            const auto num_steps = 10;
             for (auto i = 0; i < num_steps; ++i, px += dx) {
                 auto xg = std::floor(px.x());
                 auto yg = std::floor(px.y());
@@ -171,7 +171,7 @@ void rayCastVoxelsPreciseX(Pixels& pixels, const World& world) {
                     if (voxels(xgi, ygi, zgi)) {
                         const auto xi = static_cast<size_t>(x);
                         const auto yi = static_cast<size_t>(y);
-                        pixels(xi, yi) = RED;
+                        pixels(xi, yi) = packColorRgb(255 - 255 * i / num_steps, 0, 0);
                         break;
                     }
                 }
