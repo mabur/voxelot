@@ -145,16 +145,17 @@ void rayCastVoxelsPreciseX(Pixels& pixels, const World& world) {
             // When taking unit steps along x grid:
             if (direction_in_grid.x() == 0) continue;
             const Vector4d dx = direction_in_grid / std::abs(direction_in_grid.x());
-            Vector4d px = direction_in_grid.x() > 0
-                ? p_in_grid - (p_in_grid.x() - std::floor(p_in_grid.x())) * dx
-                : p_in_grid - (std::ceil(p_in_grid.x()) - p_in_grid.x()) * dx;            
+            const double tx = direction_in_grid.x() > 0
+                ? std::floor(p_in_grid.x()) - p_in_grid.x()
+                : p_in_grid.x() - std::ceil(p_in_grid.x());
+            Vector4d px = p_in_grid + tx * dx;
 
-            const auto num_steps = 10;
-            for (auto i = 0; i < num_steps; ++i, px += dx) {
+            for (;;) {
                 auto xg = std::floor(px.x());
                 auto yg = std::floor(px.y());
                 auto zg = std::floor(px.z());
                 if (direction_in_grid.x() < 0) xg--;
+                px += dx;
 
                 if (direction_in_grid.x() < 0 && xg < 0) break;
                 if (direction_in_grid.y() < 0 && yg < 0) break;
@@ -172,7 +173,7 @@ void rayCastVoxelsPreciseX(Pixels& pixels, const World& world) {
                     if (voxels(xgi, ygi, zgi)) {
                         const auto xi = static_cast<size_t>(x);
                         const auto yi = static_cast<size_t>(y);
-                        pixels(xi, yi) = packColorRgb(255 - 255 * i / num_steps, 0, 0);
+                        pixels(xi, yi) = RED;
                         break;
                     }
                 }
