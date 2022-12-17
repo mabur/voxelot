@@ -154,6 +154,14 @@ void rayCastVoxelsPreciseX(Pixels& pixels, const World& world) {
                 if (direction_in_grid.x() < 0) {
                     xg--;
                 }
+
+                if (direction_in_grid.x() < 0 && xg < 0) break;
+                if (direction_in_grid.y() < 0 && yg < 0) break;
+                if (direction_in_grid.z() < 0 && zg < 0) break;
+                if (direction_in_grid.x() > 0 && grid_width - 1 < xg) break;
+                if (direction_in_grid.y() > 0 && grid_height - 1 < yg) break;
+                if (direction_in_grid.z() > 0 && grid_depth - 1 < zg) break;
+
                 if (0 <= xg && xg <= grid_width - 1 &&
                     0 <= yg && yg <= grid_height - 1 &&
                     0 <= zg && zg <= grid_depth - 1) {
