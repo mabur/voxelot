@@ -116,6 +116,59 @@ Vector4d normalizeDirection(const Vector4d& v) {
     return v / v.norm();
 }
 
+void rayCastVoxelsPreciseX(Pixels& pixels, const World& world) {
+    const auto& voxels = world.map.voxels;
+
+    const auto image_width = static_cast<double>(pixels.width());
+    const auto image_height = static_cast<double>(pixels.height());
+
+    const auto grid_width = static_cast<double>(voxels.width());
+    const auto grid_height = static_cast<double>(voxels.height());
+    const auto grid_depth = static_cast<double>(voxels.depth());
+
+    const auto grid_from_image = gridFromImage(world);
+    const auto grid_from_world = world.map.gridFromWorld();
+    const auto camera_in_grid = normalizePosition(
+        grid_from_world * Vector4d{
+        world.extrinsics.x,
+        world.extrinsics.y,
+        world.extrinsics.z,
+        1.0
+    });
+    for (auto y = 0.0; y < image_height; ++y) {
+        for (auto x = 0.0; x < image_width; ++x) {
+            const auto p_in_grid = normalizePosition(
+                grid_from_image * Vector4d{ x, y, 1, 1 }
+            );
+            const auto direction = (p_in_grid - camera_in_grid).eval();
+
+            // When taking steps of 1 along x grid:
+            Vector4d dx = direction / direction.x();
+            Vector4d px = p_in_grid - (p_in_grid.x() - std::floor(p_in_grid.x())) * dx;            
+
+            const auto num_steps = 100;
+            for (auto i = 0; i < num_steps; ++i, px += dx) {
+                const auto xg = std::floor(px.x());
+                const auto yg = std::floor(px.y());
+                const auto zg = std::floor(px.z());
+                if (0 <= xg && xg <= grid_width - 1 &&
+                    0 <= yg && yg <= grid_height - 1 &&
+                    0 <= zg && zg <= grid_depth - 1) {
+                    const auto xgi = static_cast<size_t>(xg);
+                    const auto ygi = static_cast<size_t>(yg);
+                    const auto zgi = static_cast<size_t>(zg);
+                    if (voxels(xgi, ygi, zgi)) {
+                        const auto xi = static_cast<size_t>(x);
+                        const auto yi = static_cast<size_t>(y);
+                        pixels(xi, yi) = RED;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
 void rayCastVoxels(Pixels& pixels, const World& world) {
     const auto& voxels = world.map.voxels;
 
@@ -174,7 +227,8 @@ void rayCastVoxels(Pixels& pixels, const World& world) {
 void draw(Pixels& pixels, const World& world) {
     fill(pixels, BLACK);
 
-    rayCastVoxels(pixels, world);
+    // rayCastVoxels(pixels, world);
+    rayCastVoxelsPreciseX(pixels, world);
 
     const auto image_from_world = imageFromWorld(
         world.intrinsics, world.extrinsics
