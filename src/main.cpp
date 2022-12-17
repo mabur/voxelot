@@ -24,6 +24,12 @@ Vector4d velocityInCamera(const Input& input) {
     if (keyboard[SDL_SCANCODE_A]) {
         velocity_camera(0) -= velocity;
     }
+    if (input.isRightMouseButtonDown()) {
+        velocity_camera(1) += velocity;
+    }
+    if (input.isLeftMouseButtonDown()) {
+        velocity_camera(1) -= velocity;
+    }
     if (keyboard[SDL_SCANCODE_W]) {
         velocity_camera(2) += velocity;
     }
