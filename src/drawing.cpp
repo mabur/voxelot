@@ -118,7 +118,19 @@ double startOffsetForAxis(double direction_in_grid, double p_in_grid) {
         : p_in_grid - ceil(p_in_grid);
 }
 
-const int* castSingleRay(
+enum class Direction {
+    X_POSITIVE, X_NEGATIVE, Y_POSITIVE, Y_NEGATIVE, Z_POSITIVE, Z_NEGATIVE
+};
+
+struct Intersection {
+    size_t x = 0;
+    size_t y = 0;
+    size_t z = 0;
+    Direction ray_direction = Direction::X_POSITIVE;
+    bool did_hit = false;
+};
+
+Intersection castSingleRay(
     const Vector4d& camera_in_grid,
     const Vector4d& direction_in_grid,
     const Voxels& voxels
@@ -153,7 +165,16 @@ const int* castSingleRay(
     double ty = start_offset_y * dty;
     double tz = start_offset_z * dtz;
 
+    const auto x_direction = direction_in_grid.x() < 0 ?
+        Direction::X_NEGATIVE : Direction::X_POSITIVE;
+    const auto y_direction = direction_in_grid.y() < 0 ?
+        Direction::Y_NEGATIVE : Direction::Y_POSITIVE;
+    const auto z_direction = direction_in_grid.z() < 0 ?
+        Direction::Z_NEGATIVE : Direction::Z_POSITIVE;
+
     for (;;) {
+        auto ray_direction = Direction{};
+
         auto xg = 0.0;
         auto yg = 0.0;
         auto zg = 0.0;
@@ -164,6 +185,7 @@ const int* castSingleRay(
             if (direction_in_grid.x() < 0) xg--;
             px += dx;
             tx += dtx;
+            ray_direction = x_direction;
         }
         else if (ty <= tx && ty <= tz) {
             xg = floor(py.x());
@@ -172,6 +194,7 @@ const int* castSingleRay(
             if (direction_in_grid.y() < 0) yg--;
             py += dy;
             ty += dty;
+            ray_direction = y_direction;
         }
         else {
             xg = floor(pz.x());
@@ -180,14 +203,15 @@ const int* castSingleRay(
             if (direction_in_grid.z() < 0) zg--;
             pz += dz;
             tz += dtz;
+            ray_direction = z_direction;
         }
 
-        if (direction_in_grid.x() < 0 && xg < 0) return nullptr;
-        if (direction_in_grid.y() < 0 && yg < 0) return nullptr;
-        if (direction_in_grid.z() < 0 && zg < 0) return nullptr;
-        if (direction_in_grid.x() > 0 && grid_width - 1 < xg) return nullptr;
-        if (direction_in_grid.y() > 0 && grid_height - 1 < yg) return nullptr;
-        if (direction_in_grid.z() > 0 && grid_depth - 1 < zg) return nullptr;
+        if (direction_in_grid.x() < 0 && xg < 0) return {};
+        if (direction_in_grid.y() < 0 && yg < 0) return {};
+        if (direction_in_grid.z() < 0 && zg < 0) return {};
+        if (direction_in_grid.x() > 0 && grid_width - 1 < xg) return {};
+        if (direction_in_grid.y() > 0 && grid_height - 1 < yg) return {};
+        if (direction_in_grid.z() > 0 && grid_depth - 1 < zg) return {};
 
         if (0 <= xg && xg <= grid_width - 1 &&
             0 <= yg && yg <= grid_height - 1 &&
@@ -196,9 +220,20 @@ const int* castSingleRay(
             const auto ygi = static_cast<size_t>(yg);
             const auto zgi = static_cast<size_t>(zg);
             if (voxels(xgi, ygi, zgi)) {
-                return &voxels(xgi, ygi, zgi);
+                return Intersection{xgi, ygi, zgi, ray_direction, true};
             }
         }
+    }
+}
+
+Color colorFromRayDirection(Direction d) {
+    switch (d) {
+        case Direction::X_POSITIVE: return packColorRgb(255,64,64);
+        case Direction::X_NEGATIVE: return packColorRgb(192,0,0);
+        case Direction::Y_POSITIVE: return packColorRgb(128,0,0);
+        case Direction::Y_NEGATIVE: return packColorRgb(255,128,128);
+        case Direction::Z_POSITIVE: return packColorRgb(255,0,0);
+        case Direction::Z_NEGATIVE: return packColorRgb(255,0,0);
     }
 }
 
@@ -218,11 +253,12 @@ void rayCastVoxels(Pixels& pixels, const World& world) {
                 grid_from_image * p_in_image
             );
             const auto direction_in_grid = (p_in_grid - camera_in_grid).eval();
-            const auto voxel_pointer = castSingleRay(
+            const auto intersection = castSingleRay(
                 camera_in_grid, direction_in_grid, world.map.voxels
             );
-            if (voxel_pointer) {
-                pixels(x, y) = RED;
+            if (intersection.did_hit) {
+                const auto color = colorFromRayDirection(intersection.ray_direction);
+                pixels(x, y) = color;
             }
         }
     }
