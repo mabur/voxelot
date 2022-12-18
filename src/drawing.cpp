@@ -274,8 +274,6 @@ void draw(Pixels& pixels, const World& world) {
 
     fill(pixels, BLACK);
 
-    rayCastVoxels(pixels, world);
-
     const auto image_from_world = imageFromWorld(
         world.intrinsics, world.extrinsics
     );
@@ -293,6 +291,7 @@ void draw(Pixels& pixels, const World& world) {
             }
         }
     }
+    rayCastVoxels(pixels, world);
     drawPoints(pixels, image_from_world, activeBlockMesh(world), GREEN);
     drawFrameFrequency(pixels, world);
 }
