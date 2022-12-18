@@ -202,7 +202,7 @@ const int* castSingleRay(
     }
 }
 
-void rayCastVoxelsPrecise(Pixels& pixels, const World& world) {
+void rayCastVoxels(Pixels& pixels, const World& world) {
     const auto grid_from_image = gridFromImage(world);
     const auto grid_from_world = world.map.gridFromWorld();
     const auto camera_in_world = cameraInWorld(world.extrinsics);
@@ -238,7 +238,7 @@ void draw(Pixels& pixels, const World& world) {
 
     fill(pixels, BLACK);
 
-    rayCastVoxelsPrecise(pixels, world);
+    rayCastVoxels(pixels, world);
 
     const auto image_from_world = imageFromWorld(
         world.intrinsics, world.extrinsics
