@@ -48,10 +48,10 @@ CameraExtrinsics rotate(CameraExtrinsics extrinsics, const Input& input) {
     return extrinsics;
 }
 
-void updateCamera(World& world, const Input& input) {
-    auto& extrinsics = world.extrinsics;
+CameraExtrinsics updateCamera(CameraExtrinsics extrinsics, const Input& input) {
     extrinsics = translate(extrinsics, input);
     extrinsics = rotate(extrinsics, input);
+    return extrinsics;
 }
 
 int main(int, char**)
@@ -71,7 +71,7 @@ int main(int, char**)
             return 0;
         }
         world.timer.update();
-        updateCamera(world, input);
+        world.extrinsics = updateCamera(world.extrinsics, input);
         draw(pixels, world);
         sdl.draw(pixels.data());
 
