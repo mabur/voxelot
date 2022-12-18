@@ -156,18 +156,18 @@ void rayCastVoxelsPrecise(Pixels& pixels, const World& world) {
             const Vector4d dz = direction_in_grid / std::abs(direction_in_grid.z());
 
             const double start_offset_x = startOffsetForAxis(
-                direction_in_grid.x(), p_in_grid.x()
+                direction_in_grid.x(), camera_in_grid.x()
             );
             const double start_offset_y = startOffsetForAxis(
-                direction_in_grid.y(), p_in_grid.y()
+                direction_in_grid.y(), camera_in_grid.y()
             );
             const double start_offset_z = startOffsetForAxis(
-                direction_in_grid.z(), p_in_grid.z()
+                direction_in_grid.z(), camera_in_grid.z()
             );
 
-            Vector4d px = p_in_grid + start_offset_x * dx;
-            Vector4d py = p_in_grid + start_offset_y * dy;
-            Vector4d pz = p_in_grid + start_offset_z * dz;
+            Vector4d px = camera_in_grid + start_offset_x * dx;
+            Vector4d py = camera_in_grid + start_offset_y * dy;
+            Vector4d pz = camera_in_grid + start_offset_z * dz;
 
             double dtx = dx.norm();
             double dty = dy.norm();
