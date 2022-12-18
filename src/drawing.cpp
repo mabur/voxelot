@@ -151,9 +151,6 @@ void rayCastVoxelsPrecise(Pixels& pixels, const World& world) {
             );
             const Vector4d direction_in_grid = p_in_grid - camera_in_grid;
 
-            // When taking unit steps along x grid:
-            if (direction_in_grid.x() == 0) continue;
-
             const Vector4d dx = direction_in_grid / std::abs(direction_in_grid.x());
             const Vector4d dy = direction_in_grid / std::abs(direction_in_grid.y());
             const Vector4d dz = direction_in_grid / std::abs(direction_in_grid.z());
