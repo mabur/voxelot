@@ -7,6 +7,10 @@ T clamp(T x, T low, T high) {
     return std::min(std::max(x, low), high);
 }
 
+size_t sizeFromDouble(double x) {
+    return x < 0 ? 0 : static_cast<size_t>(x);
+}
+
 size_t roundDoubleToSize(double x) {
     return static_cast<size_t>(std::max(std::round(x), 0.0));
 }
@@ -42,12 +46,16 @@ Vector4d Map::centerInWorld() const {
     return worldFromGrid() * centerInGrid();
 }
 
-Vector4d Map::closestVoxelCenterInWorld(const Vector4d& position_in_world) const {
+Vector4s Map::closestVoxelInGrid(const Vector4d& position_in_world) const {
     const auto p = (gridFromWorld() * position_in_world).eval();
-    return worldFromGrid() * Vector4d{
-        0.5 + clamp(std::round(p.x()), 0.0, static_cast<double>(widthGrid() - 1)),
-        0.5 + clamp(std::round(p.y()), 0.0, static_cast<double>(heightGrid() - 1)),
-        0.5 + clamp(std::round(p.z()), 0.0, static_cast<double>(depthGrid() - 1)),
-        1.0
+    return Vector4s {
+        clamp<size_t>(sizeFromDouble(std::round(p.x())), 0, widthGrid() - 1),
+        clamp<size_t>(sizeFromDouble(std::round(p.y())), 0, heightGrid() - 1),
+        clamp<size_t>(sizeFromDouble(std::round(p.z())), 0, depthGrid() - 1),
+        1
     };
+}
+
+Vector4d Map::voxelCenterInWorld(const Vector4s& voxel_in_grid) const {
+    return worldFromGrid() * (voxel_in_grid.cast<double>()+ Vector4d{0.5, 0.5, 0.5, 0.0});
 }

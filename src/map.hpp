@@ -37,5 +37,6 @@ struct Map {
     Matrix4d gridFromWorld() const;
     Vector4d centerInGrid() const;
     Vector4d centerInWorld() const;
-    Vector4d closestVoxelCenterInWorld(const Vector4d& position_in_world) const;
+    Vector4s closestVoxelInGrid(const Vector4d& position_in_world) const;
+    Vector4d voxelCenterInWorld(const Vector4s& voxel_in_grid) const;    
 };

@@ -54,6 +54,19 @@ CameraExtrinsics updateCamera(CameraExtrinsics extrinsics, const Input& input) {
     return extrinsics;
 }
 
+void updateMap(World& world, const Input& input) {
+    const auto voxel_in_grid = selectedVoxel(world);
+    const auto x = voxel_in_grid.x();
+    const auto y = voxel_in_grid.y();
+    const auto z = voxel_in_grid.z();
+    if (input.isLeftMouseButtonDown()) {
+        world.map.voxels(x, y, z) = 1;
+    }
+    if (input.isRightMouseButtonDown()) {
+        world.map.voxels(x, y, z) = 0;
+    }
+}
+
 int main(int, char**)
 {
     const auto WINDOW_TITLE = "voxelot";
@@ -72,6 +85,7 @@ int main(int, char**)
         }
         world.timer.update();
         world.extrinsics = updateCamera(world.extrinsics, input);
+        updateMap(world, input);
         draw(pixels, world);
         sdl.draw(pixels.data());
 

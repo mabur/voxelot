@@ -77,12 +77,8 @@ Vectors4d getCubeCorners(const Vector4d& center, double side) {
 
 Vectors4d activeBlockMesh(const World& world) {
     const auto& map = world.map;
-    const auto camera_view_position = 
-        (worldFromCamera(world.extrinsics) *
-        Vector4d { 0, 0, 2 * map.voxel_length, 1 }).eval();
-    const auto block_center = map.closestVoxelCenterInWorld(
-        camera_view_position
-    );
+    const auto voxel_in_grid = selectedVoxel(world);
+    const auto block_center = map.voxelCenterInWorld(voxel_in_grid);
     return getCubeCorners(block_center, map.voxel_length);
 }
 
