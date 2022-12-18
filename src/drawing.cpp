@@ -122,6 +122,90 @@ double startOffsetForAxis(double direction_in_grid, double p_in_grid) {
         : p_in_grid - ceil(p_in_grid);
 }
 
+const int* castSingleRay(
+    const Voxels& voxels,
+    const Vector4d& direction_in_grid,
+    const Vector4d& camera_in_grid
+) {
+    const auto grid_width = static_cast<double>(voxels.width());
+    const auto grid_height = static_cast<double>(voxels.height());
+    const auto grid_depth = static_cast<double>(voxels.depth());
+
+    const Vector4d dx = direction_in_grid / std::abs(direction_in_grid.x());
+    const Vector4d dy = direction_in_grid / std::abs(direction_in_grid.y());
+    const Vector4d dz = direction_in_grid / std::abs(direction_in_grid.z());
+
+    const double start_offset_x = startOffsetForAxis(
+        direction_in_grid.x(), camera_in_grid.x()
+    );
+    const double start_offset_y = startOffsetForAxis(
+        direction_in_grid.y(), camera_in_grid.y()
+    );
+    const double start_offset_z = startOffsetForAxis(
+        direction_in_grid.z(), camera_in_grid.z()
+    );
+
+    Vector4d px = camera_in_grid + start_offset_x * dx;
+    Vector4d py = camera_in_grid + start_offset_y * dy;
+    Vector4d pz = camera_in_grid + start_offset_z * dz;
+
+    double dtx = dx.norm();
+    double dty = dy.norm();
+    double dtz = dz.norm();
+
+    double tx = start_offset_x * dtx;
+    double ty = start_offset_y * dty;
+    double tz = start_offset_z * dtz;
+
+    for (;;) {
+        auto xg = 0.0;
+        auto yg = 0.0;
+        auto zg = 0.0;
+        if (tx <= ty && tx <= tz) {
+            xg = floor(px.x());
+            yg = floor(px.y());
+            zg = floor(px.z());
+            if (direction_in_grid.x() < 0) xg--;
+            px += dx;
+            tx += dtx;
+        }
+        else if (ty <= tx && ty <= tz) {
+            xg = floor(py.x());
+            yg = floor(py.y());
+            zg = floor(py.z());
+            if (direction_in_grid.y() < 0) yg--;
+            py += dy;
+            ty += dty;
+        }
+        else {
+            xg = floor(pz.x());
+            yg = floor(pz.y());
+            zg = floor(pz.z());
+            if (direction_in_grid.z() < 0) zg--;
+            pz += dz;
+            tz += dtz;
+        }
+
+        if (direction_in_grid.x() < 0 && xg < 0) return nullptr;
+        if (direction_in_grid.y() < 0 && yg < 0) return nullptr;
+        if (direction_in_grid.z() < 0 && zg < 0) return nullptr;
+        if (direction_in_grid.x() > 0 && grid_width - 1 < xg) return nullptr;
+        if (direction_in_grid.y() > 0 && grid_height - 1 < yg) return nullptr;
+        if (direction_in_grid.z() > 0 && grid_depth - 1 < zg) return nullptr;
+
+        if (0 <= xg && xg <= grid_width - 1 &&
+            0 <= yg && yg <= grid_height - 1 &&
+            0 <= zg && zg <= grid_depth - 1) {
+            const auto xgi = static_cast<size_t>(xg);
+            const auto ygi = static_cast<size_t>(yg);
+            const auto zgi = static_cast<size_t>(zg);
+            if (voxels(xgi, ygi, zgi)) {
+                return &voxels(xgi, ygi, zgi);
+            }
+        }
+    }
+}
+
 void rayCastVoxelsPrecise(Pixels& pixels, const World& world) {
     using std::floor;
     using std::ceil;
@@ -150,82 +234,13 @@ void rayCastVoxelsPrecise(Pixels& pixels, const World& world) {
                 grid_from_image * Vector4d{ x, y, 1, 1 }
             );
             const Vector4d direction_in_grid = p_in_grid - camera_in_grid;
-
-            const Vector4d dx = direction_in_grid / std::abs(direction_in_grid.x());
-            const Vector4d dy = direction_in_grid / std::abs(direction_in_grid.y());
-            const Vector4d dz = direction_in_grid / std::abs(direction_in_grid.z());
-
-            const double start_offset_x = startOffsetForAxis(
-                direction_in_grid.x(), camera_in_grid.x()
+            const auto voxel_pointer = castSingleRay(
+                voxels, direction_in_grid, camera_in_grid
             );
-            const double start_offset_y = startOffsetForAxis(
-                direction_in_grid.y(), camera_in_grid.y()
-            );
-            const double start_offset_z = startOffsetForAxis(
-                direction_in_grid.z(), camera_in_grid.z()
-            );
-
-            Vector4d px = camera_in_grid + start_offset_x * dx;
-            Vector4d py = camera_in_grid + start_offset_y * dy;
-            Vector4d pz = camera_in_grid + start_offset_z * dz;
-
-            double dtx = dx.norm();
-            double dty = dy.norm();
-            double dtz = dz.norm();
-
-            double tx = start_offset_x * dtx;
-            double ty = start_offset_y * dty;
-            double tz = start_offset_z * dtz;
-
-            for (;;) {
-                auto xg = 0.0;
-                auto yg = 0.0;
-                auto zg = 0.0;
-                if (tx <= ty && tx <= tz) {
-                    xg = floor(px.x());
-                    yg = floor(px.y());
-                    zg = floor(px.z());
-                    if (direction_in_grid.x() < 0) xg--;
-                    px += dx;
-                    tx += dtx;
-                }
-                else if (ty <= tx && ty <= tz) {
-                    xg = floor(py.x());
-                    yg = floor(py.y());
-                    zg = floor(py.z());
-                    if (direction_in_grid.y() < 0) yg--;
-                    py += dy;
-                    ty += dty;
-                }
-                else {
-                    xg = floor(pz.x());
-                    yg = floor(pz.y());
-                    zg = floor(pz.z());
-                    if (direction_in_grid.z() < 0) zg--;
-                    pz += dz;
-                    tz += dtz;
-                }
-
-                if (direction_in_grid.x() < 0 && xg < 0) break;
-                if (direction_in_grid.y() < 0 && yg < 0) break;
-                if (direction_in_grid.z() < 0 && zg < 0) break;
-                if (direction_in_grid.x() > 0 && grid_width - 1 < xg) break;
-                if (direction_in_grid.y() > 0 && grid_height - 1 < yg) break;
-                if (direction_in_grid.z() > 0 && grid_depth - 1 < zg) break;
-
-                if (0 <= xg && xg <= grid_width - 1 &&
-                    0 <= yg && yg <= grid_height - 1 &&
-                    0 <= zg && zg <= grid_depth - 1) {
-                    const auto xgi = static_cast<size_t>(xg);
-                    const auto ygi = static_cast<size_t>(yg);
-                    const auto zgi = static_cast<size_t>(zg);
-                    if (voxels(xgi, ygi, zgi)) {
-                        const auto xi = static_cast<size_t>(x);
-                        const auto yi = static_cast<size_t>(y);
-                        pixels(xi, yi) = RED;
-                        break;
-                    }
-                }
+            if (voxel_pointer) {
+                const auto xi = static_cast<size_t>(x);
+                const auto yi = static_cast<size_t>(y);
+                pixels(xi, yi) = RED;
             }
         }
     }
