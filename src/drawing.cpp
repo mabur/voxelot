@@ -116,6 +116,12 @@ Vector4d normalizeDirection(const Vector4d& v) {
     return v / v.norm();
 }
 
+double startOffsetForAxis(double direction_in_grid, double p_in_grid) {
+    return direction_in_grid > 0
+        ? floor(p_in_grid) - p_in_grid
+        : p_in_grid - ceil(p_in_grid);
+}
+
 void rayCastVoxelsPrecise(Pixels& pixels, const World& world) {
     using std::floor;
     using std::ceil;
@@ -147,19 +153,20 @@ void rayCastVoxelsPrecise(Pixels& pixels, const World& world) {
 
             // When taking unit steps along x grid:
             if (direction_in_grid.x() == 0) continue;
+
             const Vector4d dx = direction_in_grid / std::abs(direction_in_grid.x());
             const Vector4d dy = direction_in_grid / std::abs(direction_in_grid.y());
             const Vector4d dz = direction_in_grid / std::abs(direction_in_grid.z());
 
-            const double start_offset_x = direction_in_grid.x() > 0
-                ? floor(p_in_grid.x()) - p_in_grid.x()
-                : p_in_grid.x() - ceil(p_in_grid.x());
-            const double start_offset_y = direction_in_grid.y() > 0
-                ? floor(p_in_grid.y()) - p_in_grid.y()
-                : p_in_grid.y() - ceil(p_in_grid.y());
-            const double start_offset_z = direction_in_grid.z() > 0
-                ? floor(p_in_grid.z()) - p_in_grid.z()
-                : p_in_grid.z() - ceil(p_in_grid.z());
+            const double start_offset_x = startOffsetForAxis(
+                direction_in_grid.x(), p_in_grid.x()
+            );
+            const double start_offset_y = startOffsetForAxis(
+                direction_in_grid.y(), p_in_grid.y()
+            );
+            const double start_offset_z = startOffsetForAxis(
+                direction_in_grid.z(), p_in_grid.z()
+            );
 
             Vector4d px = p_in_grid + start_offset_x * dx;
             Vector4d py = p_in_grid + start_offset_y * dy;
