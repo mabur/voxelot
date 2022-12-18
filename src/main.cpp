@@ -6,44 +6,42 @@
 #include "sdl_wrappers.hpp"
 #include "world.hpp"
 
-const auto velocity = 0.05;
-const auto angular_velocity = 0.1 * 3.14 / 180.0;
-
 template<typename T>
-T clamp(T x, T low, T high)
-{
+T clamp(T x, T low, T high) {
     return std::min(std::max(x, low), high);
 }
 
-Vector4d velocityInCamera(const Input& input) {
+CameraExtrinsics translate(CameraExtrinsics extrinsics, const Input& input) {
+    const auto V = 0.05;
+    const auto world_from_camera = worldFromCamera(extrinsics);
     const auto& keyboard = input.keyboard;
-    auto velocity_camera = Vector4d{ 0.0, 0.0, 0.0, 0.0 };
+    auto velocity_in_world = Vector4d{ 0,0,0,0 };
     if (keyboard[SDL_SCANCODE_D]) {
-        velocity_camera(0) += velocity;
+        velocity_in_world += world_from_camera * Vector4d{ +V,0,0,0 };
     }
     if (keyboard[SDL_SCANCODE_A]) {
-        velocity_camera(0) -= velocity;
-    }
-    if (input.isRightMouseButtonDown()) {
-        velocity_camera(1) += velocity;
-    }
-    if (input.isLeftMouseButtonDown()) {
-        velocity_camera(1) -= velocity;
+        velocity_in_world += world_from_camera * Vector4d{ -V,0,0,0 };
     }
     if (keyboard[SDL_SCANCODE_W]) {
-        velocity_camera(2) += velocity;
+        velocity_in_world += world_from_camera * Vector4d{ 0,0,+V,0 };
     }
     if (keyboard[SDL_SCANCODE_S]) {
-        velocity_camera(2) -= velocity;
+        velocity_in_world += world_from_camera * Vector4d{ 0,0,-V,0 };
     }
-    return velocity_camera;
-}
-
-Vector4d velocityInWorld(const Input& input, CameraExtrinsics extrinsics) {
-    return worldFromCamera(extrinsics) * velocityInCamera(input);
+    if (keyboard[SDL_SCANCODE_Q]) {
+        velocity_in_world += Vector4d{ 0,+V,0,0 };
+    }
+    if (keyboard[SDL_SCANCODE_E]) {
+        velocity_in_world += Vector4d{ 0,-V,0,0 };
+    }
+    extrinsics.x += velocity_in_world.x();
+    extrinsics.y += velocity_in_world.y();
+    extrinsics.z += velocity_in_world.z();
+    return extrinsics;
 }
 
 CameraExtrinsics rotate(CameraExtrinsics extrinsics, const Input& input) {
+    const auto angular_velocity = 0.1 * 3.14 / 180.0;
     extrinsics.yaw += input.mouse_dx * angular_velocity;
     extrinsics.pitch -= input.mouse_dy * angular_velocity;
     extrinsics.pitch = clamp(extrinsics.pitch, -3.14 * 0.5, +3.14 * 0.5);
@@ -52,10 +50,7 @@ CameraExtrinsics rotate(CameraExtrinsics extrinsics, const Input& input) {
 
 void updateCamera(World& world, const Input& input) {
     auto& extrinsics = world.extrinsics;
-    const auto velocity_in_world = velocityInWorld(input, extrinsics);
-    extrinsics.x += velocity_in_world.x();
-    extrinsics.y += velocity_in_world.y();
-    extrinsics.z += velocity_in_world.z();
+    extrinsics = translate(extrinsics, input);
     extrinsics = rotate(extrinsics, input);
 }
 
