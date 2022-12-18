@@ -123,9 +123,9 @@ double startOffsetForAxis(double direction_in_grid, double p_in_grid) {
 }
 
 const int* castSingleRay(
-    const Voxels& voxels,
+    const Vector4d& camera_in_grid,
     const Vector4d& direction_in_grid,
-    const Vector4d& camera_in_grid
+    const Voxels& voxels
 ) {
     const auto grid_width = static_cast<double>(voxels.width());
     const auto grid_height = static_cast<double>(voxels.height());
@@ -207,40 +207,26 @@ const int* castSingleRay(
 }
 
 void rayCastVoxelsPrecise(Pixels& pixels, const World& world) {
-    using std::floor;
-    using std::ceil;
-
-    const auto& voxels = world.map.voxels;
-
-    const auto image_width = static_cast<double>(pixels.width());
-    const auto image_height = static_cast<double>(pixels.height());
-
-    const auto grid_width = static_cast<double>(voxels.width());
-    const auto grid_height = static_cast<double>(voxels.height());
-    const auto grid_depth = static_cast<double>(voxels.depth());
-
     const auto grid_from_image = gridFromImage(world);
     const auto grid_from_world = world.map.gridFromWorld();
+    const auto camera_in_world = cameraInWorld(world.extrinsics);
     const auto camera_in_grid = normalizePosition(
-        grid_from_world * Vector4d{
-        world.extrinsics.x,
-        world.extrinsics.y,
-        world.extrinsics.z,
-        1.0
-    });
-    for (auto y = 0.0; y < image_height; ++y) {
-        for (auto x = 0.0; x < image_width; ++x) {
-            const Vector4d p_in_grid = normalizePosition(
-                grid_from_image * Vector4d{ x, y, 1, 1 }
+        grid_from_world * camera_in_world
+    );
+    double yd = 0.0;
+    for (size_t y = 0; y < pixels.height(); ++y, ++yd) {
+        double xd = 0.0;
+        for (size_t x = 0; x < pixels.width(); ++x, ++xd) {
+            const auto p_in_image = Vector4d{xd, yd, 1, 1};
+            const auto p_in_grid = normalizePosition(
+                grid_from_image * p_in_image
             );
-            const Vector4d direction_in_grid = p_in_grid - camera_in_grid;
+            const auto direction_in_grid = (p_in_grid - camera_in_grid).eval();
             const auto voxel_pointer = castSingleRay(
-                voxels, direction_in_grid, camera_in_grid
+                camera_in_grid, direction_in_grid, world.map.voxels
             );
             if (voxel_pointer) {
-                const auto xi = static_cast<size_t>(x);
-                const auto yi = static_cast<size_t>(y);
-                pixels(xi, yi) = RED;
+                pixels(x, y) = RED;
             }
         }
     }
