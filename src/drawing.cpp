@@ -288,6 +288,11 @@ void rayCastVoxels(Pixels& pixels, const World& world) {
 }; // namespace
 
 void draw(Pixels& pixels, const World& world) {
+
+    const auto width = world.map.voxels.width();
+    const auto height = world.map.voxels.height();
+    const auto depth = world.map.voxels.depth();
+
     fill(pixels, BLACK);
 
     // rayCastVoxels(pixels, world);
@@ -298,31 +303,14 @@ void draw(Pixels& pixels, const World& world) {
     );
     const auto world_from_grid = world.map.worldFromGrid();
     const auto d = world.map.voxel_length;
-    for (size_t z = 0; z < world.map.voxels.depth() + 1; ++z) {
-        for (size_t y = 0; y < world.map.voxels.height() + 1; ++y) {
-            for (size_t x = 0; x < world.map.voxels.width() + 1; ++x) {
+    for (size_t z = 0; z < depth + 1; ++z) {
+        for (size_t y = 0; y < height + 1; ++y) {
+            for (size_t x = 0; x < width + 1; ++x) {
                 const auto points = Vectors4d{
                     world_from_grid * Vector4s{x, y, z, 1}.cast<double>(),
                 };
-                drawPoints(pixels, image_from_world, points, GRAY);
-            }
-        }
-    }
-    for (size_t z = 0; z < world.map.voxels.depth(); ++z) {
-        for (size_t y = 0; y < world.map.voxels.height(); ++y) {
-            for (size_t x = 0; x < world.map.voxels.width(); ++x) {
-                if (world.map.voxels(x, y, z)) {
-                    const auto points = Vectors4d{
-                        world_from_grid * Vector4s{x + 0, y + 0, z + 0, 1}.cast<double>(),
-                        world_from_grid * Vector4s{x + 0, y + 0, z + 1, 1}.cast<double>(),
-                        world_from_grid * Vector4s{x + 0, y + 1, z + 0, 1}.cast<double>(),
-                        world_from_grid * Vector4s{x + 0, y + 1, z + 1, 1}.cast<double>(),
-                        world_from_grid * Vector4s{x + 1, y + 0, z + 0, 1}.cast<double>(),
-                        world_from_grid * Vector4s{x + 1, y + 0, z + 1, 1}.cast<double>(),
-                        world_from_grid * Vector4s{x + 1, y + 1, z + 0, 1}.cast<double>(),
-                        world_from_grid * Vector4s{x + 1, y + 1, z + 1, 1}.cast<double>(),
-                    };
-                    drawPoints(pixels, image_from_world, points, RED);
+                if (x == 0 or y == 0 or z == 0 or x == width or y == height or z == depth) {
+                    drawPoints(pixels, image_from_world, points, GRAY);
                 }
             }
         }
