@@ -13,6 +13,8 @@ inline int roundDoubleToInt(double x) {
     return static_cast<int>(std::round(x));
 }
 
+using Voxels = Array3<int>;
+
 // x right
 // y up
 // z backward
@@ -23,7 +25,7 @@ inline int roundDoubleToInt(double x) {
 // in the grid coordinate system.
 // The world coordinate system has the same origin but different scale.
 struct Map {
-    Array3<int> voxels;
+    Voxels voxels;
     double voxel_length = 1.0;
     Map();
 

@@ -26,7 +26,7 @@ public:
     T& operator()(size_t x, size_t y, size_t z) {
         return array_[z * width_ * height_ + y * width_ + x];
     }
-    T operator()(size_t x, size_t y, size_t z) const {
+    const T& operator()(size_t x, size_t y, size_t z) const {
         return array_[z * width_ * height_ + y * width_ + x];
     }
 
