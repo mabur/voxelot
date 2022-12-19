@@ -29,9 +29,9 @@ public:
     void draw(const Uint32* pixels);
     int width;
     int height;
+    SDL_Renderer* renderer;
 private:
     SDL_Window* window;
-    SDL_Renderer* renderer;
     SDL_Texture* texture;
     ButtonState left_mouse_button;
     ButtonState escape_button;

@@ -1,6 +1,7 @@
 #define SDL_MAIN_HANDLED
 
 #include "algorithm.hpp"
+#include "button.hpp"
 #include "camera.hpp"
 #include "drawing.hpp"
 #include "sdl_wrappers.hpp"
@@ -78,6 +79,15 @@ int main(int, char**)
 
     World world = makeWorld(sdl.width, sdl.height);
 
+    Button button;
+    button.rectangle.w = 64;
+    button.rectangle.h = 16;
+    button.rectangle.x = WIDTH / 2 - button.rectangle.w / 2;
+    button.rectangle.y = HEIGHT - button.rectangle.h;
+    button.r = 0;
+    button.g = 0;
+    button.b = 255;
+
     while (sdl.noQuitMessage()) {
         const auto input = sdl.getInput();
         if (input.escape_button == ButtonState::CLICKED) {
@@ -88,7 +98,8 @@ int main(int, char**)
         updateMap(world, input);
         draw(pixels, world);
         sdl.draw(pixels.data());
-
+        drawButton(button, sdl.renderer);
+        SDL_RenderPresent(sdl.renderer);
     }
     return 0;
 }

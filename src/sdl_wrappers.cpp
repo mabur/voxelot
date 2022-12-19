@@ -103,7 +103,6 @@ void Sdl::draw(const Uint32* pixels)
 {
     SDL_UpdateTexture(texture, nullptr, pixels, width * sizeof(Uint32));
     SDL_RenderCopy(renderer, texture, nullptr, nullptr);
-    SDL_RenderPresent(renderer);
 }
 
 void Sdl::setMouseModeRelative() {
