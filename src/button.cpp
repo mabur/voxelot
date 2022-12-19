@@ -16,57 +16,38 @@ Uint8 subUint8(Uint8 a, Uint8 b) {
 
 void drawButton(const Button& button, SDL_Renderer* renderer) {
     if (button.visible) {
+        const auto xmin = button.rectangle.x;
+        const auto ymin = button.rectangle.y;
+        const auto xmax = button.rectangle.x + button.rectangle.w - 1;
+        const auto ymax = button.rectangle.y + button.rectangle.h - 1;
+
+        const auto r = button.r;
+        const auto g = button.g;
+        const auto b = button.b;
+
+        const auto r_bright = addUint8(r, 128);
+        const auto g_bright = addUint8(g, 128);
+        const auto b_bright = addUint8(b, 128);
+
+        const auto r_dark = subUint8(r, 128);
+        const auto g_dark = subUint8(g, 128);
+        const auto b_dark = subUint8(b, 128);
+
         if (button.selected) {
-            SDL_SetRenderDrawColor(renderer, button.r, button.g, button.b, 1);
+            SDL_SetRenderDrawColor(renderer, r, g, b, 1);
             SDL_RenderFillRect(renderer, &button.rectangle);
         }
         else {
-            SDL_SetRenderDrawColor(renderer, button.r, button.g, button.b, 1);
+            SDL_SetRenderDrawColor(renderer, r, g, b, 1);
             SDL_RenderFillRect(renderer, &button.rectangle);
             // Top line & left line:
-            SDL_SetRenderDrawColor(
-                renderer,
-                addUint8(button.r, 128),
-                addUint8(button.g, 128),
-                addUint8(button.b, 128),
-                1
-            );
-            SDL_RenderDrawLine(
-                renderer,
-                button.rectangle.x,
-                button.rectangle.y,
-                button.rectangle.x + button.rectangle.w - 1,
-                button.rectangle.y
-            );
-            SDL_RenderDrawLine(
-                renderer,
-                button.rectangle.x,
-                button.rectangle.y,
-                button.rectangle.x,
-                button.rectangle.y + button.rectangle.h - 1
-            );
+            SDL_SetRenderDrawColor(renderer, r_bright, g_bright, b_bright, 1);
+            SDL_RenderDrawLine(renderer, xmin, ymin, xmax, ymin);
+            SDL_RenderDrawLine(renderer, xmin, ymin, xmin, ymax);
             // Bottom line & right line:
-            SDL_SetRenderDrawColor(
-                renderer,
-                subUint8(button.r, 128),
-                subUint8(button.g, 128),
-                subUint8(button.b, 128),
-                1
-            );
-            SDL_RenderDrawLine(
-                renderer,
-                button.rectangle.x,
-                button.rectangle.y + button.rectangle.h - 1,
-                button.rectangle.x + button.rectangle.w - 1,
-                button.rectangle.y + button.rectangle.h - 1
-            );
-            SDL_RenderDrawLine(
-                renderer,
-                button.rectangle.x + button.rectangle.w - 1,
-                button.rectangle.y,
-                button.rectangle.x + button.rectangle.w - 1,
-                button.rectangle.y + button.rectangle.h - 1
-            );
+            SDL_SetRenderDrawColor(renderer, r_dark, g_dark, b_dark, 1);
+            SDL_RenderDrawLine(renderer, xmin, ymax, xmax, ymax);
+            SDL_RenderDrawLine(renderer, xmax, ymin, xmax, ymax);
         }
     }
 }
