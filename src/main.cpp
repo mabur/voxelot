@@ -75,13 +75,16 @@ using BuildingBlockButtons = SingleSelectButtons<int>;
 BuildingBlockButtons makeBuildingBlockButtons(
     int screen_width, int screen_height
 ) {
+    const auto NUM_BUTTONS = 8;
+    const auto BUTTON_SIZE = 16;
+    const auto START_X = screen_width / 2 - NUM_BUTTONS * BUTTON_SIZE / 2;
     auto buttons = BuildingBlockButtons{};
-    for (auto i = 0; i < 8; ++i) {
+    for (auto i = 0; i < NUM_BUTTONS; ++i) {
         Button button;
         button.text = std::to_string(i);
-        button.rectangle.w = 16;
-        button.rectangle.h = 16;
-        button.rectangle.x = 0 + i * button.rectangle.w;
+        button.rectangle.w = BUTTON_SIZE;
+        button.rectangle.h = BUTTON_SIZE;
+        button.rectangle.x = START_X + i * BUTTON_SIZE;
         button.rectangle.y = 0;
         button.r = 60;
         button.g = 180;
