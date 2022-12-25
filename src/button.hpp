@@ -22,8 +22,7 @@ using SingleSelectButtons = std::map<Key, Button>;
 template<typename Key>
 bool handleMouseDown(SDL_Point mouse, SingleSelectButtons<Key>& buttons) {
     for (auto& item : buttons) {
-        const auto rectangle = item.second.rectangle();
-        if (SDL_PointInRect(&mouse, &rectangle)) {
+        if (SDL_PointInRect(&mouse, &item.second.rectangle)) {
             for (auto& item : buttons) {
                 item.second.selected = false;
             }
