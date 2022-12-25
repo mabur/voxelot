@@ -272,7 +272,7 @@ void draw(Pixels& pixels, const World& world) {
     const auto height = world.map.voxels.height();
     const auto depth = world.map.voxels.depth();
 
-    fill(pixels, BLACK);
+    fill(pixels, GRAY128);
 
     const auto image_from_world = imageFromWorld(
         world.intrinsics, world.extrinsics
@@ -286,7 +286,7 @@ void draw(Pixels& pixels, const World& world) {
                     world_from_grid * Vector4s{x, y, z, 1}.cast<double>(),
                 };
                 if (x == 0 or y == 0 or z == 0 or x == width or y == height or z == depth) {
-                    drawPoints(pixels, image_from_world, points, GRAY64);
+                    drawPoints(pixels, image_from_world, points, GRAY192);
                 }
             }
         }
