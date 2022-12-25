@@ -81,7 +81,7 @@ BuildingBlockButtons makeBuildingBlockButtons(
     auto buttons = BuildingBlockButtons{};
     for (auto i = 0; i < NUM_BUTTONS; ++i) {
         Button button;
-        button.text = std::to_string(i);
+        button.text = std::to_string(i + 1);
         button.rectangle.w = BUTTON_SIZE;
         button.rectangle.h = BUTTON_SIZE;
         button.rectangle.x = START_X + i * BUTTON_SIZE;
