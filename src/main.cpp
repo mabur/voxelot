@@ -91,6 +91,7 @@ BuildingBlockButtons makeBuildingBlockButtons(
         button.b = 75;
         buttons[i] = button;
     }
+    buttons[0].selected = true;
     return buttons;
 }
 
