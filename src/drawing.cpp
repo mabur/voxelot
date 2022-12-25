@@ -27,14 +27,6 @@ void drawCharacter(
     }
 }
 
-void drawString(
-    Pixels& pixels, const std::string& s, size_t x, size_t y, Color color
-) {
-    for (size_t i = 0; i < s.size(); ++i) {
-        drawCharacter(pixels, s[i], x + 8 * i, y, color);
-    }
-}
-
 void drawFrameFrequency(Pixels& pixels, const World& world) {
     const auto time = std::to_string(world.timer.frequency()) + "Hz";
     const auto x = pixels.width() - 8 * 5;
@@ -265,6 +257,14 @@ void rayCastVoxels(Pixels& pixels, const World& world) {
 }
 
 }; // namespace
+
+void drawString(
+    Pixels& pixels, const std::string& s, size_t x, size_t y, Color color
+) {
+    for (size_t i = 0; i < s.size(); ++i) {
+        drawCharacter(pixels, s[i], x + 8 * i, y, color);
+    }
+}
 
 void draw(Pixels& pixels, const World& world) {
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <map>
 
 #include "color.hpp"
@@ -7,6 +8,7 @@
 #include "sdl_wrappers.hpp"
 
 struct Button {
+    std::string text;
     SDL_Rect rectangle;
     Uint8 r = 255;
     Uint8 g = 255;
