@@ -16,11 +16,11 @@ struct Button {
 
 void drawButton(const Button& button, SDL_Renderer* renderer);
 
-template<typename EnumType>
-using SingleSelectButtons = std::map<EnumType, Button>;
+template<typename Key>
+using SingleSelectButtons = std::map<Key, Button>;
 
-template<typename EnumType>
-bool handleMouseDown(SDL_Point mouse, SingleSelectButtons<EnumType>& buttons) {
+template<typename Key>
+bool handleMouseDown(SDL_Point mouse, SingleSelectButtons<Key>& buttons) {
     for (auto& item : buttons) {
         const auto rectangle = item.second.rectangle();
         if (SDL_PointInRect(&mouse, &rectangle)) {
