@@ -7,6 +7,8 @@
 #include "sdl_wrappers.hpp"
 #include "world.hpp"
 
+enum class ControlMode {GUI_2D, VOXEL_3D};
+
 template<typename T>
 T clamp(T x, T low, T high) {
     return std::min(std::max(x, low), high);
@@ -68,6 +70,26 @@ void updateMap(World& world, const Input& input) {
     }
 }
 
+using BuildingBlockButtons = SingleSelectButtons<int>;
+
+BuildingBlockButtons makeBuildingBlockButtons(
+    int screen_width, int screen_height
+) {
+    auto buttons = BuildingBlockButtons{};
+    for (auto i = 0; i < 8; ++i) {
+        Button button;
+        button.rectangle.w = 32;
+        button.rectangle.h = 16;
+        button.rectangle.x = 0 + i * 32;
+        button.rectangle.y = 0;
+        button.r = 60;
+        button.g = 180;
+        button.b = 75;
+        buttons[i] = button;
+    }
+    return buttons;
+}
+
 int main(int, char**)
 {
     const auto WINDOW_TITLE = "voxelot";
@@ -76,29 +98,50 @@ int main(int, char**)
 
     auto pixels = Pixels(WIDTH, HEIGHT, BLACK);
     auto sdl = Sdl(WINDOW_TITLE, WIDTH, HEIGHT);
+    auto world = makeWorld(sdl.width, sdl.height);
+    auto building_block_buttons = makeBuildingBlockButtons(WIDTH, HEIGHT);
+    auto control_mode = ControlMode::VOXEL_3D;
 
-    World world = makeWorld(sdl.width, sdl.height);
-
-    Button button;
-    button.rectangle.w = 64;
-    button.rectangle.h = 16;
-    button.rectangle.x = WIDTH / 2 - button.rectangle.w / 2;
-    button.rectangle.y = HEIGHT - button.rectangle.h;
-    button.r = 0;
-    button.g = 0;
-    button.b = 255;
-
-    while (sdl.noQuitMessage()) {
-        const auto input = sdl.getInput();
-        if (input.escape_button == ButtonState::CLICKED) {
-            return 0;
+    while (true) {
+        auto e = SDL_Event();
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_KEYDOWN) {
+                const auto key = e.key.keysym.sym;
+                if (key == SDLK_ESCAPE) {
+                    return 0;
+                }
+                if (key == SDLK_SPACE) {
+                    if (control_mode == ControlMode::VOXEL_3D) {
+                        control_mode = ControlMode::GUI_2D;
+                        sdl.setMouseModeAbsolute();
+                    }
+                    else {
+                        control_mode = ControlMode::VOXEL_3D;
+                        sdl.setMouseModeRelative();
+                    }
+                }
+            }
         }
+        const auto input = sdl.getInput();
         world.timer.update();
-        world.extrinsics = updateCamera(world.extrinsics, input);
-        updateMap(world, input);
+        if (control_mode == ControlMode::VOXEL_3D) {
+            world.extrinsics = updateCamera(world.extrinsics, input);
+            updateMap(world, input);
+        }
+        else {
+            if (input.isLeftMouseButtonDown()) {
+                handleMouseDown(
+                    SDL_Point{ input.mouse_x, input.mouse_y },
+                    building_block_buttons
+                );
+            }
+        }
         draw(pixels, world);
         sdl.draw(pixels.data());
-        drawButton(button, sdl.renderer);
+
+        for (auto item : building_block_buttons) {
+            drawButton(item.second, sdl.renderer);
+        }
         SDL_RenderPresent(sdl.renderer);
     }
     return 0;
