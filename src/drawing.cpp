@@ -286,7 +286,7 @@ void draw(Pixels& pixels, const World& world) {
                     world_from_grid * Vector4s{x, y, z, 1}.cast<double>(),
                 };
                 if (x == 0 or y == 0 or z == 0 or x == width or y == height or z == depth) {
-                    drawPoints(pixels, image_from_world, points, GRAY);
+                    drawPoints(pixels, image_from_world, points, GRAY64);
                 }
             }
         }
