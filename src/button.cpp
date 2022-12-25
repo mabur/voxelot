@@ -25,13 +25,13 @@ void drawButton(const Button& button, SDL_Renderer* renderer) {
         const auto g = button.g;
         const auto b = button.b;
 
-        const auto r_bright = addUint8(r, 128);
-        const auto g_bright = addUint8(g, 128);
-        const auto b_bright = addUint8(b, 128);
+        const auto r_bright = addUint8(r, 64);
+        const auto g_bright = addUint8(g, 64);
+        const auto b_bright = addUint8(b, 64);
 
-        const auto r_dark = subUint8(r, 128);
-        const auto g_dark = subUint8(g, 128);
-        const auto b_dark = subUint8(b, 128);
+        const auto r_dark = subUint8(r, 64);
+        const auto g_dark = subUint8(g, 64);
+        const auto b_dark = subUint8(b, 64);
 
         if (button.selected) {
             SDL_SetRenderDrawColor(renderer, r, g, b, 1);
