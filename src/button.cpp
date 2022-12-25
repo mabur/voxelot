@@ -22,21 +22,33 @@ void drawButton(const Button& button, Pixels& pixels) {
     const auto xmax = button.rectangle.x + button.rectangle.w - 1;
     const auto ymax = button.rectangle.y + button.rectangle.h - 1;
 
+    const auto COLOR_DELTA = 40;
+
     const auto r = button.r;
     const auto g = button.g;
     const auto b = button.b;
 
-    const auto r_bright = addUint8(r, 64);
-    const auto g_bright = addUint8(g, 64);
-    const auto b_bright = addUint8(b, 64);
+    const auto r_bright = addUint8(r, COLOR_DELTA);
+    const auto g_bright = addUint8(g, COLOR_DELTA);
+    const auto b_bright = addUint8(b, COLOR_DELTA);
 
-    const auto r_dark = subUint8(r, 64);
-    const auto g_dark = subUint8(g, 64);
-    const auto b_dark = subUint8(b, 64);
+    const auto r_brightest = addUint8(r, 2 * COLOR_DELTA);
+    const auto g_brightest = addUint8(g, 2 * COLOR_DELTA);
+    const auto b_brightest = addUint8(b, 2 * COLOR_DELTA);
+
+    const auto r_dark = subUint8(r, COLOR_DELTA);
+    const auto g_dark = subUint8(g, COLOR_DELTA);
+    const auto b_dark = subUint8(b, COLOR_DELTA);
+
+    const auto r_darkest = subUint8(r, 2 * COLOR_DELTA);
+    const auto g_darkest = subUint8(g, 2 * COLOR_DELTA);
+    const auto b_darkest = subUint8(b, 2 * COLOR_DELTA);
 
     const auto color = packColorRgb(r, g, b);
     const auto color_dark = packColorRgb(r_dark, g_dark, b_dark);
+    const auto color_darkest = packColorRgb(r_darkest, g_darkest, b_darkest);
     const auto color_bright = packColorRgb(r_bright, g_bright, b_bright);
+    const auto color_brightest = packColorRgb(r_brightest, g_brightest, b_brightest);
 
     if (button.selected) {
         for (auto y = ymin; y <= ymax; ++y) {
@@ -59,6 +71,10 @@ void drawButton(const Button& button, Pixels& pixels) {
                     pixels(x, y) = color;
                 }
             }
+            pixels(xmin, ymin) = color_brightest;
+            pixels(xmax, ymax) = color_darkest;
+            pixels(xmin, ymax) = color;
+            pixels(xmax, ymin) = color;
         }
         drawString(pixels, button.text, xmin + 4, ymin + 4, WHITE);
     }
