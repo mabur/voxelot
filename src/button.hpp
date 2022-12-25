@@ -3,6 +3,7 @@
 #include <map>
 
 #include "color.hpp"
+#include "drawing.hpp"
 #include "sdl_wrappers.hpp"
 
 struct Button {
@@ -14,7 +15,7 @@ struct Button {
     bool selected = false;
 };
 
-void drawButton(const Button& button, SDL_Renderer* renderer);
+void drawButton(const Button& button, Pixels& pixels);
 
 template<typename Key>
 using SingleSelectButtons = std::map<Key, Button>;

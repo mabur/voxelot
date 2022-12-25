@@ -131,17 +131,16 @@ int main(int, char**)
         else {
             if (input.isLeftMouseButtonDown()) {
                 handleMouseDown(
-                    SDL_Point{ input.mouse_x, input.mouse_y },
+                    SDL_Point{input.mouse_x, input.mouse_y},
                     building_block_buttons
                 );
             }
         }
         draw(pixels, world);
-        sdl.draw(pixels.data());
-
         for (auto item : building_block_buttons) {
-            drawButton(item.second, sdl.renderer);
+            drawButton(item.second, pixels);
         }
+        sdl.draw(pixels.data());
         SDL_RenderPresent(sdl.renderer);
     }
     return 0;

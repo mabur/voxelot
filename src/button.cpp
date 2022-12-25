@@ -14,7 +14,7 @@ Uint8 subUint8(Uint8 a, Uint8 b) {
     );
 }
 
-void drawButton(const Button& button, SDL_Renderer* renderer) {
+void drawButton(const Button& button, Pixels& pixels) {
     if (button.visible) {
         const auto xmin = button.rectangle.x;
         const auto ymin = button.rectangle.y;
@@ -33,21 +33,31 @@ void drawButton(const Button& button, SDL_Renderer* renderer) {
         const auto g_dark = subUint8(g, 64);
         const auto b_dark = subUint8(b, 64);
 
+        const auto color = packColorRgb(r, g, b);
+        const auto color_dark = packColorRgb(r_dark, g_dark, b_dark);
+        const auto color_bright = packColorRgb(r_bright, g_bright, b_bright);
+
         if (button.selected) {
-            SDL_SetRenderDrawColor(renderer, r, g, b, 1);
-            SDL_RenderFillRect(renderer, &button.rectangle);
+            for (auto y = ymin; y <= ymax; ++y) {
+                for (auto x = xmin; x <= xmax; ++x) {
+                    pixels(x, y) = color;
+                }
+            }
         }
         else {
-            SDL_SetRenderDrawColor(renderer, r, g, b, 1);
-            SDL_RenderFillRect(renderer, &button.rectangle);
-            // Top line & left line:
-            SDL_SetRenderDrawColor(renderer, r_bright, g_bright, b_bright, 1);
-            SDL_RenderDrawLine(renderer, xmin, ymin, xmax, ymin);
-            SDL_RenderDrawLine(renderer, xmin, ymin, xmin, ymax);
-            // Bottom line & right line:
-            SDL_SetRenderDrawColor(renderer, r_dark, g_dark, b_dark, 1);
-            SDL_RenderDrawLine(renderer, xmin, ymax, xmax, ymax);
-            SDL_RenderDrawLine(renderer, xmax, ymin, xmax, ymax);
+            for (auto y = ymin; y <= ymax; ++y) {
+                for (auto x = xmin; x <= xmax; ++x) {
+                    if (x == xmin || y == ymin) {
+                        pixels(x, y) = color_bright;
+                    }
+                    else if (x == xmax || y == ymax) {
+                        pixels(x, y) = color_dark;
+                    }
+                    else {
+                        pixels(x, y) = color;
+                    }
+                }
+            }
         }
     }
 }
