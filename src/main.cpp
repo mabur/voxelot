@@ -4,6 +4,7 @@
 #include "button.hpp"
 #include "camera.hpp"
 #include "drawing.hpp"
+#include "draw_gui.hpp"
 #include "sdl_wrappers.hpp"
 #include "world.hpp"
 

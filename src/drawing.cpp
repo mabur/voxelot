@@ -7,25 +7,13 @@
 
 #include "algorithm.hpp"
 #include "color.hpp"
+#include "draw_gui.hpp"
 #include "map.hpp"
 #include "text.hpp"
 #include "vector_space.hpp"
 #include "world.hpp"
 
 namespace {
-
-void drawCharacter(
-    Pixels& pixels, char character, size_t x_start, size_t y_start, PackedColor color
-) {
-    const auto& digit_bitmap = text_bitmaps::get(character);
-    for (size_t y = 0; y < 8; ++y) {
-        for (size_t x = 0; x < 8; ++x) {
-            if (digit_bitmap[y * 8 + x]) {
-                pixels(x_start + x, y_start + y) = color;
-            }
-        }
-    }
-}
 
 void drawFrameFrequency(Pixels& pixels, const World& world) {
     const auto time = std::to_string(world.timer.frequency()) + "Hz";
@@ -257,14 +245,6 @@ void rayCastVoxels(Pixels& pixels, const World& world) {
 }
 
 }; // namespace
-
-void drawString(
-    Pixels& pixels, const std::string& s, size_t x, size_t y, PackedColor color
-) {
-    for (size_t i = 0; i < s.size(); ++i) {
-        drawCharacter(pixels, s[i], x + 8 * i, y, color);
-    }
-}
 
 void draw(Pixels& pixels, const World& world) {
 

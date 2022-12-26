@@ -16,8 +16,6 @@ struct Button {
     bool selected = false;
 };
 
-void drawButton(const Button& button, Pixels& pixels);
-
 template<typename Key>
 using SingleSelectButtons = std::map<Key, Button>;
 
