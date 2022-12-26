@@ -3,9 +3,10 @@
 #include <string>
 #include <map>
 
+#include <SDL2/SDL_Rect.h>
+
 #include "color.hpp"
-#include "drawing.hpp"
-#include "sdl_wrappers.hpp"
+#include "pixels.hpp"
 
 struct Button {
     std::string text;

@@ -1,5 +1,7 @@
 #include "button.hpp"
 
+#include "drawing.hpp"
+
 void drawButton(const Button& button, Pixels& pixels) {
     if (!button.visible) return;
 
