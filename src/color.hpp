@@ -4,12 +4,18 @@
 
 using PackedColor = uint32_t;
 
-PackedColor packColorRgb(uint32_t r, uint32_t g, uint32_t b);
+struct Color {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
 
-const auto BLACK = packColorRgb(0, 0, 0);
-const auto WHITE = packColorRgb(255, 255, 255);
-const auto GRAY64 = packColorRgb(64, 64, 64);
-const auto GRAY128 = packColorRgb(128, 128, 128);
-const auto GRAY192 = packColorRgb(192, 192, 192);
-const auto RED = packColorRgb(255, 0, 0);
-const auto GREEN = packColorRgb(0, 255, 0);
+    PackedColor pack() const;
+};
+
+const auto BLACK = Color{0, 0, 0};
+const auto WHITE = Color{255, 255, 255};
+const auto GRAY64 = Color{64, 64, 64};
+const auto GRAY128 = Color{128, 128, 128};
+const auto GRAY192 = Color{192, 192, 192};
+const auto RED = Color{55, 0, 0};
+const auto GREEN = Color{0, 255, 0};
