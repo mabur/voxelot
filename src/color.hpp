@@ -9,6 +9,8 @@ struct Color {
     uint8_t g;
     uint8_t b;
 
+    Color operator+(uint8_t x) const;
+    Color operator-(uint8_t x) const;
     PackedColor pack() const;
 };
 

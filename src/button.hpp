@@ -10,9 +10,7 @@
 struct Button {
     std::string text;
     SDL_Rect rectangle;
-    Uint8 r = 255;
-    Uint8 g = 255;
-    Uint8 b = 255;
+    Color color;
     bool visible = true;
     bool selected = false;
 };

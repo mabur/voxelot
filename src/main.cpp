@@ -83,15 +83,13 @@ BuildingBlockButtons makeBuildingBlockButtons(
     const auto START_X = screen_width - NUM_BUTTONS * BUTTON_SIZE;
     auto buttons = BuildingBlockButtons{};
     for (auto i = 0; i < NUM_BUTTONS; ++i) {
-        Button button;
+        auto button = Button{};
         button.text = std::to_string(i + 1);
         button.rectangle.w = BUTTON_SIZE;
         button.rectangle.h = BUTTON_SIZE;
         button.rectangle.x = START_X + i * BUTTON_SIZE;
         button.rectangle.y = 0;
-        button.r = 60;
-        button.g = 180;
-        button.b = 75;
+        button.color = Color{60, 180, 75};
         buttons[i] = button;
     }
     buttons[0].selected = true;
@@ -105,9 +103,7 @@ BuildModeButtons makeBuildModeButtons(
     const auto BUTTON_HEIGHT = 16;
     const auto START_X = 0;
 
-    const auto RED = 64;
-    const auto GREEN = 128;
-    const auto BLUE = 255;
+    const auto COLOR = Color{ 64, 128, 255 };
 
     auto buttons = BuildModeButtons{};
 
@@ -117,9 +113,7 @@ BuildModeButtons makeBuildModeButtons(
     button_block.rectangle.h = BUTTON_HEIGHT;
     button_block.rectangle.x = START_X + 0 * BUTTON_WIDTH;
     button_block.rectangle.y = 0;
-    button_block.r = RED;
-    button_block.g = GREEN;
-    button_block.b = BLUE;
+    button_block.color = COLOR;
     button_block.selected = true;
 
     auto button_scene = Button{};
@@ -128,9 +122,7 @@ BuildModeButtons makeBuildModeButtons(
     button_scene.rectangle.h = BUTTON_HEIGHT;
     button_scene.rectangle.x = START_X + 1 * BUTTON_WIDTH;
     button_scene.rectangle.y = 0;
-    button_scene.r = RED;
-    button_scene.g = GREEN;
-    button_scene.b = BLUE;
+    button_scene.color = COLOR;
 
     buttons[BuildMode::BUILD_BLOCK] = button_block;
     buttons[BuildMode::BUILD_SCENE] = button_scene;
