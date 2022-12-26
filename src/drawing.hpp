@@ -11,7 +11,7 @@
 struct World;
 
 void drawString(
-    Pixels& pixels, const std::string& s, size_t x, size_t y, Color color
+    Pixels& pixels, const std::string& s, size_t x, size_t y, PackedColor color
 );
 
 void draw(Pixels& pixels, const World& world);

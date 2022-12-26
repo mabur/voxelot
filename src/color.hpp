@@ -2,9 +2,9 @@
 
 #include <cstdint>
 
-using Color = uint32_t;
+using PackedColor = uint32_t;
 
-Color packColorRgb(uint32_t r, uint32_t g, uint32_t b);
+PackedColor packColorRgb(uint32_t r, uint32_t g, uint32_t b);
 
 const auto BLACK = packColorRgb(0, 0, 0);
 const auto WHITE = packColorRgb(255, 255, 255);

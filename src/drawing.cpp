@@ -15,7 +15,7 @@
 namespace {
 
 void drawCharacter(
-    Pixels& pixels, char character, size_t x_start, size_t y_start, Color color
+    Pixels& pixels, char character, size_t x_start, size_t y_start, PackedColor color
 ) {
     const auto& digit_bitmap = text_bitmaps::get(character);
     for (size_t y = 0; y < 8; ++y) {
@@ -39,7 +39,7 @@ bool isBehindCamera(const Vector4d& v)
     return v(2) <= 0;
 }
 
-void drawPoint(Pixels& pixels, Vector4d position_image, Color color) {
+void drawPoint(Pixels& pixels, Vector4d position_image, PackedColor color) {
     const auto width = pixels.width();
     const auto height = pixels.height();
     if (isBehindCamera(position_image)) {
@@ -78,7 +78,7 @@ void drawPoints(
     Pixels& pixels,
     const Matrix4d& image_from_world,
     const Vectors4d& positions_in_world,
-    Color color
+    PackedColor color
 ) {
     for (const auto& position_world : positions_in_world) {
         const auto position_image = (image_from_world * position_world).eval();
@@ -218,7 +218,7 @@ Intersection castSingleRay(
     }
 }
 
-Color colorFromRayDirection(Direction d) {
+PackedColor colorFromRayDirection(Direction d) {
     switch (d) {
         case Direction::X_POSITIVE: return packColorRgb(255,64,64);
         case Direction::X_NEGATIVE: return packColorRgb(192,0,0);
@@ -259,7 +259,7 @@ void rayCastVoxels(Pixels& pixels, const World& world) {
 }; // namespace
 
 void drawString(
-    Pixels& pixels, const std::string& s, size_t x, size_t y, Color color
+    Pixels& pixels, const std::string& s, size_t x, size_t y, PackedColor color
 ) {
     for (size_t i = 0; i < s.size(); ++i) {
         drawCharacter(pixels, s[i], x + 8 * i, y, color);
