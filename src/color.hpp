@@ -2,8 +2,6 @@
 
 #include <cstdint>
 
-using PackedColor = uint32_t;
-
 struct Color {
     uint8_t r;
     uint8_t g;
@@ -11,7 +9,6 @@ struct Color {
 
     Color operator+(uint8_t x) const;
     Color operator-(uint8_t x) const;
-    PackedColor pack() const;
 };
 
 const auto BLACK = Color{0, 0, 0};

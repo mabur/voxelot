@@ -10,11 +10,12 @@ void drawButton(const Button& button, Pixels& pixels) {
 
     const auto COLOR_DELTA = 40;
 
-    const auto color = (button.color).pack();
-    const auto color_bright = (button.color + COLOR_DELTA).pack();
-    const auto color_brightest = (button.color + 2 * COLOR_DELTA).pack();
-    const auto color_dark = (button.color - COLOR_DELTA).pack();
-    const auto color_darkest = (button.color - 2 * COLOR_DELTA).pack();
+    const auto color_text = packColor(WHITE);
+    const auto color = packColor(button.color);
+    const auto color_bright = packColor(button.color + COLOR_DELTA);
+    const auto color_brightest = packColor(button.color + 2 * COLOR_DELTA);
+    const auto color_dark = packColor(button.color - COLOR_DELTA);
+    const auto color_darkest = packColor(button.color - 2 * COLOR_DELTA);
 
     if (button.selected) {
         for (auto y = ymin; y <= ymax; ++y) {
@@ -22,7 +23,7 @@ void drawButton(const Button& button, Pixels& pixels) {
                 pixels(x, y) = color;
             }
         }
-        drawString(pixels, button.text, xmin + 4, ymin + 5, WHITE.pack());
+        drawString(pixels, button.text, xmin + 4, ymin + 5, color_text);
     }
     else {
         for (auto y = ymin; y <= ymax; ++y) {
@@ -42,7 +43,7 @@ void drawButton(const Button& button, Pixels& pixels) {
             pixels(xmin, ymax) = color;
             pixels(xmax, ymin) = color;
         }
-        drawString(pixels, button.text, xmin + 4, ymin + 4, WHITE.pack());
+        drawString(pixels, button.text, xmin + 4, ymin + 4, color_text);
     }
     
 }

@@ -31,7 +31,7 @@ void drawFrameFrequency(Pixels& pixels, const World& world) {
     const auto time = std::to_string(world.timer.frequency()) + "Hz";
     const auto x = pixels.width() - 8 * 5;
     const auto y = pixels.height() - 16;
-    drawString(pixels, time, x, y, WHITE.pack());
+    drawString(pixels, time, x, y, packColor(WHITE));
 }
 
 bool isBehindCamera(const Vector4d& v)
@@ -220,12 +220,12 @@ Intersection castSingleRay(
 
 PackedColor colorFromRayDirection(Direction d) {
     switch (d) {
-        case Direction::X_POSITIVE: return Color{255,64,64}.pack();
-        case Direction::X_NEGATIVE: return Color{192,0,0}.pack();
-        case Direction::Y_POSITIVE: return Color{128,0,0}.pack();
-        case Direction::Y_NEGATIVE: return Color{255,128,128}.pack();
-        case Direction::Z_POSITIVE: return Color{255,0,0}.pack();
-        case Direction::Z_NEGATIVE: return Color{255,0,0}.pack();
+        case Direction::X_POSITIVE: return packColor(Color{255,64,64});
+        case Direction::X_NEGATIVE: return packColor(Color{192,0,0});
+        case Direction::Y_POSITIVE: return packColor(Color{128,0,0});
+        case Direction::Y_NEGATIVE: return packColor(Color{255,128,128});
+        case Direction::Z_POSITIVE: return packColor(Color{255,0,0});
+        case Direction::Z_NEGATIVE: return packColor(Color{255,0,0});
     }
 }
 
@@ -272,7 +272,7 @@ void draw(Pixels& pixels, const World& world) {
     const auto height = world.map.voxels.height();
     const auto depth = world.map.voxels.depth();
 
-    fill(pixels, GRAY128.pack());
+    fill(pixels, packColor(GRAY128));
 
     const auto image_from_world = imageFromWorld(
         world.intrinsics, world.extrinsics
@@ -286,12 +286,12 @@ void draw(Pixels& pixels, const World& world) {
                     world_from_grid * Vector4s{x, y, z, 1}.cast<double>(),
                 };
                 if (x == 0 or y == 0 or z == 0 or x == width or y == height or z == depth) {
-                    drawPoints(pixels, image_from_world, points, GRAY192.pack());
+                    drawPoints(pixels, image_from_world, points, packColor(GRAY192));
                 }
             }
         }
     }
     rayCastVoxels(pixels, world);
-    drawPoints(pixels, image_from_world, activeBlockMesh(world), GREEN.pack());
+    drawPoints(pixels, image_from_world, activeBlockMesh(world), packColor(GREEN));
     drawFrameFrequency(pixels, world);
 }

@@ -136,7 +136,7 @@ int main(int, char**)
     const auto WIDTH = 320;
     const auto HEIGHT = 200;
 
-    auto pixels = Pixels(WIDTH, HEIGHT, BLACK.pack());
+    auto pixels = Pixels(WIDTH, HEIGHT, packColor(BLACK));
     auto sdl = Sdl(WINDOW_TITLE, WIDTH, HEIGHT);
     auto world = makeWorld(sdl.width, sdl.height);
     auto building_block_buttons = makeBuildingBlockButtons(WIDTH, HEIGHT);
