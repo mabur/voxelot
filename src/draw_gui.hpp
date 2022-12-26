@@ -11,4 +11,4 @@ void drawString(
     Pixels& pixels, const std::string& s, size_t x, size_t y, PackedColor color
 );
 
-void drawButton(const Button& button, Pixels& pixels);
+void drawButton(Pixels& pixels, const Button& button);

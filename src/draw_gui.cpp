@@ -31,7 +31,7 @@ void drawString(
     }
 }
 
-void drawButton(const Button& button, Pixels& pixels) {
+void drawButton(Pixels& pixels, const Button& button) {
     if (!button.visible) return;
 
     const auto xmin = button.rectangle.x;

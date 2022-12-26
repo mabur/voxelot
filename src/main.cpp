@@ -184,10 +184,10 @@ int main(int, char**)
         }
         draw(pixels, world);
         for (auto item : building_block_buttons) {
-            drawButton(item.second, pixels);
+            drawButton(pixels, item.second);
         }
         for (auto item : build_mode_buttons) {
-            drawButton(item.second, pixels);
+            drawButton(pixels, item.second);
         }
         sdl.draw(pixels.data());
         SDL_RenderPresent(sdl.renderer);
