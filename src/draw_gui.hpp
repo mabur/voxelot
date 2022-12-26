@@ -1,14 +1,9 @@
 #pragma once
 
-#include <string>
-
-#include "color.hpp"
 #include "pixels.hpp"
 
 struct Button;
+struct TextLabel;
 
-void drawString(
-    Pixels& pixels, const std::string& s, size_t x, size_t y, PackedColor color
-);
-
+void drawTextLabel(Pixels& pixels, const TextLabel& text_label);
 void drawButton(Pixels& pixels, const Button& button);

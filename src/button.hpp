@@ -6,7 +6,8 @@
 #include <SDL2/SDL_Rect.h>
 
 #include "color.hpp"
-#include "pixels.hpp"
+
+struct TextLabel;
 
 struct Button {
     std::string text;
@@ -14,6 +15,8 @@ struct Button {
     Color color;
     bool visible = true;
     bool selected = false;
+    TextLabel textLabel() const;
+    TextLabel textLabelSelected() const;
 };
 
 template<typename Key>

@@ -10,16 +10,19 @@
 #include "draw_gui.hpp"
 #include "map.hpp"
 #include "text.hpp"
+#include "text_label.hpp"
 #include "vector_space.hpp"
 #include "world.hpp"
 
 namespace {
 
 void drawFrameFrequency(Pixels& pixels, const World& world) {
-    const auto time = std::to_string(world.timer.frequency()) + "Hz";
-    const auto x = pixels.width() - 8 * 5;
-    const auto y = pixels.height() - 16;
-    drawString(pixels, time, x, y, packColor(WHITE));
+    auto label = TextLabel{};
+    label.text = std::to_string(world.timer.frequency()) + "Hz";
+    label.color = WHITE;
+    label.x = static_cast<int>(pixels.width()) - 8 * 5;
+    label.y = static_cast<int>(pixels.height()) - 16;
+    drawTextLabel(pixels, label);
 }
 
 bool isBehindCamera(const Vector4d& v)

@@ -5,6 +5,7 @@
 #include "button.hpp"
 #include "color.hpp"
 #include "text.hpp"
+#include "text_label.hpp"
 
 namespace {
 
@@ -21,14 +22,24 @@ void drawCharacter(
     }
 }
 
-}; // namespace
-
 void drawString(
     Pixels& pixels, const std::string& s, size_t x, size_t y, PackedColor color
 ) {
     for (size_t i = 0; i < s.size(); ++i) {
         drawCharacter(pixels, s[i], x + 8 * i, y, color);
     }
+}
+
+}; // namespace
+
+void drawTextLabel(Pixels& pixels, const TextLabel& text_label) {
+    drawString(
+        pixels,
+        text_label.text,
+        text_label.x,
+        text_label.y,
+        packColor(text_label.color)
+    );
 }
 
 void drawButton(Pixels& pixels, const Button& button) {
@@ -54,7 +65,7 @@ void drawButton(Pixels& pixels, const Button& button) {
                 pixels(x, y) = color;
             }
         }
-        drawString(pixels, button.text, xmin + 4, ymin + 5, color_text);
+        drawTextLabel(pixels, button.textLabelSelected());
     }
     else {
         for (auto y = ymin; y <= ymax; ++y) {
@@ -74,7 +85,7 @@ void drawButton(Pixels& pixels, const Button& button) {
             pixels(xmin, ymax) = color;
             pixels(xmax, ymin) = color;
         }
-        drawString(pixels, button.text, xmin + 4, ymin + 4, color_text);
+        drawTextLabel(pixels, button.textLabel());
     }
 
 }
