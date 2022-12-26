@@ -9,6 +9,8 @@
 
 enum class ControlMode {GUI_2D, VOXEL_3D};
 
+enum class BuildMode {BUILD_BLOCK, BUILD_SCENE};
+
 template<typename T>
 T clamp(T x, T low, T high) {
     return std::min(std::max(x, low), high);
@@ -71,13 +73,14 @@ void updateMap(World& world, const Input& input) {
 }
 
 using BuildingBlockButtons = SingleSelectButtons<int>;
+using BuildModeButtons = SingleSelectButtons<BuildMode>;
 
 BuildingBlockButtons makeBuildingBlockButtons(
     int screen_width, int screen_height
 ) {
     const auto NUM_BUTTONS = 8;
     const auto BUTTON_SIZE = 16;
-    const auto START_X = screen_width / 2 - NUM_BUTTONS * BUTTON_SIZE / 2;
+    const auto START_X = screen_width - NUM_BUTTONS * BUTTON_SIZE;
     auto buttons = BuildingBlockButtons{};
     for (auto i = 0; i < NUM_BUTTONS; ++i) {
         Button button;
@@ -95,6 +98,46 @@ BuildingBlockButtons makeBuildingBlockButtons(
     return buttons;
 }
 
+BuildModeButtons makeBuildModeButtons(
+    int screen_width, int screen_height
+) {
+    const auto BUTTON_WIDTH = 48;
+    const auto BUTTON_HEIGHT = 16;
+    const auto START_X = 0;
+
+    const auto RED = 64;
+    const auto GREEN = 128;
+    const auto BLUE = 255;
+
+    auto buttons = BuildModeButtons{};
+
+    auto button_block = Button{};
+    button_block.text = "Block";
+    button_block.rectangle.w = BUTTON_WIDTH;
+    button_block.rectangle.h = BUTTON_HEIGHT;
+    button_block.rectangle.x = START_X + 0 * BUTTON_WIDTH;
+    button_block.rectangle.y = 0;
+    button_block.r = RED;
+    button_block.g = GREEN;
+    button_block.b = BLUE;
+    button_block.selected = true;
+
+    auto button_scene = Button{};
+    button_scene.text = "Scene";
+    button_scene.rectangle.w = BUTTON_WIDTH;
+    button_scene.rectangle.h = BUTTON_HEIGHT;
+    button_scene.rectangle.x = START_X + 1 * BUTTON_WIDTH;
+    button_scene.rectangle.y = 0;
+    button_scene.r = RED;
+    button_scene.g = GREEN;
+    button_scene.b = BLUE;
+
+    buttons[BuildMode::BUILD_BLOCK] = button_block;
+    buttons[BuildMode::BUILD_SCENE] = button_scene;
+
+    return buttons;
+}
+
 int main(int, char**)
 {
     const auto WINDOW_TITLE = "voxelot";
@@ -105,6 +148,7 @@ int main(int, char**)
     auto sdl = Sdl(WINDOW_TITLE, WIDTH, HEIGHT);
     auto world = makeWorld(sdl.width, sdl.height);
     auto building_block_buttons = makeBuildingBlockButtons(WIDTH, HEIGHT);
+    auto build_mode_buttons = makeBuildModeButtons(WIDTH, HEIGHT);
     auto control_mode = ControlMode::VOXEL_3D;
 
     while (true) {
@@ -139,10 +183,17 @@ int main(int, char**)
                     SDL_Point{input.mouse_x, input.mouse_y},
                     building_block_buttons
                 );
+                handleMouseDown(
+                    SDL_Point{ input.mouse_x, input.mouse_y },
+                    build_mode_buttons
+                );
             }
         }
         draw(pixels, world);
         for (auto item : building_block_buttons) {
+            drawButton(item.second, pixels);
+        }
+        for (auto item : build_mode_buttons) {
             drawButton(item.second, pixels);
         }
         sdl.draw(pixels.data());
