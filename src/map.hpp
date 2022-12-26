@@ -6,14 +6,13 @@
 
 #include "array3.hpp"
 #include "vector_space.hpp"
+#include "voxels.hpp"
 
 const auto MAP_SIZE = 8;
 
 inline int roundDoubleToInt(double x) {
     return static_cast<int>(std::round(x));
 }
-
-using Voxels = Array3<int>;
 
 // x right
 // y up
