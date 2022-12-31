@@ -13,6 +13,7 @@ struct Input {
     const Uint8* keyboard;
     bool isLeftMouseButtonDown() const;
     bool isRightMouseButtonDown() const;
+    SDL_Point mousePosition() const;
     ButtonState left_mouse_button;
     ButtonState escape_button;
 };

@@ -110,14 +110,8 @@ int main(int, char**)
         }
         else {
             if (input.isLeftMouseButtonDown()) {
-                handleMouseDown(
-                    SDL_Point{input.mouse_x, input.mouse_y},
-                    building_block_buttons
-                );
-                handleMouseDown(
-                    SDL_Point{ input.mouse_x, input.mouse_y },
-                    build_mode_buttons
-                );
+                handleMouseDown(input.mousePosition(), building_block_buttons);
+                handleMouseDown(input.mousePosition(), build_mode_buttons);
             }
         }
         draw(pixels, world);

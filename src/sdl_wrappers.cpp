@@ -16,6 +16,10 @@ bool Input::isRightMouseButtonDown() const
     return static_cast<bool>(mouse & SDL_BUTTON(SDL_BUTTON_RIGHT));
 }
 
+SDL_Point Input::mousePosition() const {
+    return SDL_Point{mouse_x, mouse_y};
+}
+
 void printError(const char* context)
 {
     std::cout << "Error in " << context << ": " << SDL_GetError() << std::endl;
