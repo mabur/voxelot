@@ -79,7 +79,7 @@ int main(int, char**)
 
     auto pixels = Pixels(WIDTH, HEIGHT, packColor(BLACK));
     auto sdl = Sdl(WINDOW_TITLE, WIDTH, HEIGHT);
-    auto world = makeWorld(sdl.width, sdl.height);
+    auto world = makeWorld(WIDTH, HEIGHT);
     auto gui = makeGui(WIDTH, HEIGHT);
     auto control_mode = ControlMode::VOXEL_3D;
 
