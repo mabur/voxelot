@@ -11,5 +11,5 @@ struct Gui {
 };
 
 Gui makeGui(int screen_width, int screen_height);
-
+void handleMouseDown(SDL_Point mouse, Gui& gui);
 void drawGui(Pixels& pixels, const Gui& gui);

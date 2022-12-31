@@ -111,8 +111,7 @@ int main(int, char**)
         }
         else {
             if (input.isLeftMouseButtonDown()) {
-                handleMouseDown(input.mousePosition(), gui.building_block_buttons);
-                handleMouseDown(input.mousePosition(), gui.build_mode_buttons);
+                handleMouseDown(input.mousePosition(), gui);
             }
         }
         draw(pixels, world);

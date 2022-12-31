@@ -64,6 +64,11 @@ Gui makeGui(int screen_width, int screen_height) {
     return gui;
 }
 
+void handleMouseDown(SDL_Point mouse, Gui& gui) {
+    handleMouseDown(mouse, gui.building_block_buttons);
+    handleMouseDown(mouse, gui.build_mode_buttons);
+}
+
 void drawGui(Pixels& pixels, const Gui& gui) {
     drawButtons(pixels, gui.building_block_buttons);
     drawButtons(pixels, gui.build_mode_buttons);
