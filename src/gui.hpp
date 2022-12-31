@@ -3,10 +3,11 @@
 #include "button.hpp"
 #include "pixels.hpp"
 
+enum class BuildingBlock { B1, B2, B3, B4, B5, B6, B7, B8, COUNT };
 enum class BuildMode { BUILD_BLOCK, BUILD_SCENE };
 
 struct Gui {
-    SingleSelectButtons<int> building_block_buttons;
+    SingleSelectButtons<BuildingBlock> building_block_buttons;
     SingleSelectButtons<BuildMode> build_mode_buttons;
 };
 

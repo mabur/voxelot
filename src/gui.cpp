@@ -2,13 +2,13 @@
 
 #include "draw_gui.hpp"
 
-SingleSelectButtons<int> makeBuildingBlockButtons(
+SingleSelectButtons<BuildingBlock> makeBuildingBlockButtons(
     int screen_width, int screen_height
 ) {
-    const auto NUM_BUTTONS = 8;
+    const auto NUM_BUTTONS = static_cast<int>(BuildingBlock::COUNT);
     const auto BUTTON_SIZE = 16;
     const auto START_X = screen_width - NUM_BUTTONS * BUTTON_SIZE;
-    auto buttons = SingleSelectButtons<int>{};
+    auto buttons = SingleSelectButtons<BuildingBlock>{};
     for (auto i = 0; i < NUM_BUTTONS; ++i) {
         auto button = Button{};
         button.text = std::to_string(i + 1);
@@ -17,9 +17,9 @@ SingleSelectButtons<int> makeBuildingBlockButtons(
         button.rectangle.x = START_X + i * BUTTON_SIZE;
         button.rectangle.y = 0;
         button.color = Color{ 60, 180, 75 };
-        buttons[i] = button;
+        buttons[static_cast<BuildingBlock>(i)] = button;
     }
-    buttons[0].selected = true;
+    buttons[BuildingBlock::B1].selected = true;
     return buttons;
 }
 
