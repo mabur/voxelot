@@ -8,6 +8,8 @@
 #include "sdl_wrappers.hpp"
 #include "world.hpp"
 
+enum class ControlMode { GUI_2D, VOXEL_3D };
+
 template<typename T>
 T clamp(T x, T low, T high) {
     return std::min(std::max(x, low), high);

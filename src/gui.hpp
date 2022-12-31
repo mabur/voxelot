@@ -2,7 +2,6 @@
 
 #include "button.hpp"
 
-enum class ControlMode { GUI_2D, VOXEL_3D };
 enum class BuildMode { BUILD_BLOCK, BUILD_SCENE };
 
 struct Gui {
