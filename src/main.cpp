@@ -7,6 +7,7 @@
 #include "gui.hpp"
 #include "sdl_wrappers.hpp"
 #include "world.hpp"
+#include "world_file.hpp"
 
 enum class ControlMode { GUI_2D, VOXEL_3D };
 
@@ -58,7 +59,7 @@ CameraExtrinsics updateCamera(CameraExtrinsics extrinsics, const Input& input) {
     return extrinsics;
 }
 
-void updateMap(World& world, const Input& input) {
+void updateMap(World& world, const Input& input, const std::string& dir_path) {
     auto& map = world.building_blocks.at(world.active_building_block);
     const auto voxel_in_grid = selectedVoxel(world);
     const auto x = voxel_in_grid.x();
@@ -66,14 +67,17 @@ void updateMap(World& world, const Input& input) {
     const auto z = voxel_in_grid.z();
     if (input.isLeftMouseButtonDown()) {
         map.voxels(x, y, z) = 1;
+        writeWorld(dir_path, world);
     }
     if (input.isRightMouseButtonDown()) {
         map.voxels(x, y, z) = 0;
+        writeWorld(dir_path, world);
     }
 }
 
 int main(int, char**)
 {
+    const auto MAP_DIR_PATH = std::string{"F:/mabur/Programmering/repositories/voxelot/src/"};
     const auto WINDOW_TITLE = "voxelot";
     const auto WIDTH = 320;
     const auto HEIGHT = 200;
@@ -81,6 +85,7 @@ int main(int, char**)
     auto pixels = Pixels(WIDTH, HEIGHT, packColor(BLACK));
     auto sdl = Sdl(WINDOW_TITLE, WIDTH, HEIGHT);
     auto world = makeWorld(WIDTH, HEIGHT);
+    readWorld(MAP_DIR_PATH, world);
     auto gui = makeGui(WIDTH, HEIGHT);
     auto control_mode = ControlMode::VOXEL_3D;
 
@@ -108,7 +113,7 @@ int main(int, char**)
 
         if (control_mode == ControlMode::VOXEL_3D) {
             world.extrinsics = updateCamera(world.extrinsics, input);
-            updateMap(world, input);
+            updateMap(world, input, MAP_DIR_PATH);
         }
         else {
             if (input.isLeftMouseButtonDown()) {
