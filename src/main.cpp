@@ -117,7 +117,9 @@ int main(int, char**)
             }
         }
         gui.frame_frequency.text = std::to_string(world.timer.frequency()) + "Hz";
-        draw(pixels, world);
+
+        fill(pixels, packColor(GRAY128));
+        draw3d(pixels, world);
         drawGui(pixels, gui);
         sdl.draw(pixels.data());
         SDL_RenderPresent(sdl.renderer);
