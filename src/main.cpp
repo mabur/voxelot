@@ -59,15 +59,16 @@ CameraExtrinsics updateCamera(CameraExtrinsics extrinsics, const Input& input) {
 }
 
 void updateMap(World& world, const Input& input) {
+    auto& map = world.building_blocks.at(world.active_building_block);
     const auto voxel_in_grid = selectedVoxel(world);
     const auto x = voxel_in_grid.x();
     const auto y = voxel_in_grid.y();
     const auto z = voxel_in_grid.z();
     if (input.isLeftMouseButtonDown()) {
-        world.map.voxels(x, y, z) = 1;
+        map.voxels(x, y, z) = 1;
     }
     if (input.isRightMouseButtonDown()) {
-        world.map.voxels(x, y, z) = 0;
+        map.voxels(x, y, z) = 0;
     }
 }
 
@@ -112,6 +113,7 @@ int main(int, char**)
         else {
             if (input.isLeftMouseButtonDown()) {
                 handleMouseDown(input.mousePosition(), gui);
+                world.active_building_block = getSelectedButton(gui.building_block_buttons);
             }
         }
         draw(pixels, world);

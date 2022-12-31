@@ -35,3 +35,13 @@ bool handleMouseDown(SDL_Point mouse, SingleSelectButtons<Key>& buttons) {
     }
     return false;
 }
+
+template<typename Key>
+Key getSelectedButton(const SingleSelectButtons<Key>& buttons) {
+    for (auto& item : buttons) {
+        if (item.second.selected) {
+            return item.first;
+        }
+    }
+    return Key{};
+}

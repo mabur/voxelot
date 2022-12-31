@@ -60,7 +60,7 @@ Vectors4d getCubeCorners(const Vector4d& center, double side) {
 }
 
 Vectors4d activeBlockMesh(const World& world) {
-    const auto& map = world.map;
+    const auto& map = world.building_blocks.at(world.active_building_block);
     const auto voxel_in_grid = selectedVoxel(world);
     const auto block_center = map.voxelCenterInWorld(voxel_in_grid);
     return getCubeCorners(block_center, map.voxel_length);
@@ -83,17 +83,19 @@ void drawPoints(
 
 void draw(Pixels& pixels, const World& world) {
 
-    const auto width = world.map.voxels.width();
-    const auto height = world.map.voxels.height();
-    const auto depth = world.map.voxels.depth();
+    const auto& map = world.building_blocks.at(world.active_building_block);
+
+    const auto width = map.voxels.width();
+    const auto height = map.voxels.height();
+    const auto depth = map.voxels.depth();
 
     fill(pixels, packColor(GRAY128));
 
     const auto image_from_world = imageFromWorld(
         world.intrinsics, world.extrinsics
     );
-    const auto world_from_grid = world.map.worldFromGrid();
-    const auto d = world.map.voxel_length;
+    const auto world_from_grid = map.worldFromGrid();
+    const auto d = map.voxel_length;
     for (size_t z = 0; z < depth + 1; ++z) {
         for (size_t y = 0; y < height + 1; ++y) {
             for (size_t x = 0; x < width + 1; ++x) {

@@ -2,14 +2,18 @@
 
 World makeWorld(size_t screen_width, size_t screen_height) {
     auto world = World{};
-    world.map = Map{};
+    for (auto i = 0; i < static_cast<int>(BuildingBlock::COUNT); ++i) {
+        world.building_blocks[static_cast<BuildingBlock>(i)] = Map{};
+    }
     world.intrinsics = makeCameraIntrinsics(screen_width, screen_height);
-    world.extrinsics = makeCameraExtrinsics(world.map.centerInWorld());
+    world.extrinsics = makeCameraExtrinsics(
+        world.building_blocks[BuildingBlock::B1].centerInWorld()
+    );
     return world;
 }
 
 Vector4s selectedVoxel(const World& world) {
-    const auto& map = world.map;
+    const auto& map = world.building_blocks.at(world.active_building_block);
     const auto camera_view_position = (
         worldFromCamera(world.extrinsics) *
         Vector4d{0, 0, 2 * map.voxel_length, 1}

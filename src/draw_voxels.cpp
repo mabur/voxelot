@@ -16,7 +16,8 @@ Matrix4d gridFromImage(const World& world) {
     const auto image_from_world = imageFromWorld(
         world.intrinsics, world.extrinsics
     );
-    const auto world_from_grid = world.map.worldFromGrid();
+    const auto& map = world.building_blocks.at(world.active_building_block);
+    const auto world_from_grid = map.worldFromGrid();
     const auto image_from_grid = image_from_world * world_from_grid;
     return image_from_grid.inverse();
 }
@@ -157,8 +158,9 @@ PackedColor colorFromRayDirection(Direction d) {
 }; // namespace
 
 void rayCastVoxels(Pixels& pixels, const World& world) {
+    const auto& map = world.building_blocks.at(world.active_building_block);
     const auto grid_from_image = gridFromImage(world);
-    const auto grid_from_world = world.map.gridFromWorld();
+    const auto grid_from_world = map.gridFromWorld();
     const auto camera_in_world = cameraInWorld(world.extrinsics);
     const auto camera_in_grid = normalizePosition(
         grid_from_world * camera_in_world
@@ -173,7 +175,7 @@ void rayCastVoxels(Pixels& pixels, const World& world) {
             );
             const auto direction_in_grid = (p_in_grid - camera_in_grid).eval();
             const auto intersection = castSingleRay(
-                camera_in_grid, direction_in_grid, world.map.voxels
+                camera_in_grid, direction_in_grid, map.voxels
             );
             if (intersection.did_hit) {
                 const auto color = colorFromRayDirection(intersection.ray_direction);

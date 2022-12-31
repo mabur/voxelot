@@ -1,6 +1,9 @@
 #pragma once
 
+#include <map>
+
 #include "camera.hpp"
+#include "gui.hpp"
 #include "map.hpp"
 #include "timer.hpp"
 #include "vector_space.hpp"
@@ -8,7 +11,8 @@
 struct World {
     CameraIntrinsics intrinsics;
     CameraExtrinsics extrinsics;
-    Map map;
+    std::map<BuildingBlock,Map> building_blocks;
+    BuildingBlock active_building_block = BuildingBlock::B1;
     FrequencyTimer timer;
 };
 
