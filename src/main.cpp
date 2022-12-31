@@ -78,8 +78,7 @@ int main(int, char**)
     auto pixels = Pixels(WIDTH, HEIGHT, packColor(BLACK));
     auto sdl = Sdl(WINDOW_TITLE, WIDTH, HEIGHT);
     auto world = makeWorld(sdl.width, sdl.height);
-    auto building_block_buttons = makeBuildingBlockButtons(WIDTH, HEIGHT);
-    auto build_mode_buttons = makeBuildModeButtons(WIDTH, HEIGHT);
+    auto gui = makeGui(WIDTH, HEIGHT);
     auto control_mode = ControlMode::VOXEL_3D;
 
     while (true) {
@@ -110,13 +109,13 @@ int main(int, char**)
         }
         else {
             if (input.isLeftMouseButtonDown()) {
-                handleMouseDown(input.mousePosition(), building_block_buttons);
-                handleMouseDown(input.mousePosition(), build_mode_buttons);
+                handleMouseDown(input.mousePosition(), gui.building_block_buttons);
+                handleMouseDown(input.mousePosition(), gui.build_mode_buttons);
             }
         }
         draw(pixels, world);
-        drawButtons(pixels, building_block_buttons);
-        drawButtons(pixels, build_mode_buttons);
+        drawButtons(pixels, gui.building_block_buttons);
+        drawButtons(pixels, gui.build_mode_buttons);
         sdl.draw(pixels.data());
         SDL_RenderPresent(sdl.renderer);
     }

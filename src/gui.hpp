@@ -5,13 +5,9 @@
 enum class ControlMode { GUI_2D, VOXEL_3D };
 enum class BuildMode { BUILD_BLOCK, BUILD_SCENE };
 
-using BuildingBlockButtons = SingleSelectButtons<int>;
-using BuildModeButtons = SingleSelectButtons<BuildMode>;
+struct Gui {
+    SingleSelectButtons<int> building_block_buttons;
+    SingleSelectButtons<BuildMode> build_mode_buttons;
+};
 
-BuildingBlockButtons makeBuildingBlockButtons(
-    int screen_width, int screen_height
-);
-
-BuildModeButtons makeBuildModeButtons(
-    int screen_width, int screen_height
-);
+Gui makeGui(int screen_width, int screen_height);

@@ -1,12 +1,12 @@
 #include "gui.hpp"
 
-BuildingBlockButtons makeBuildingBlockButtons(
+SingleSelectButtons<int> makeBuildingBlockButtons(
     int screen_width, int screen_height
 ) {
     const auto NUM_BUTTONS = 8;
     const auto BUTTON_SIZE = 16;
     const auto START_X = screen_width - NUM_BUTTONS * BUTTON_SIZE;
-    auto buttons = BuildingBlockButtons{};
+    auto buttons = SingleSelectButtons<int>{};
     for (auto i = 0; i < NUM_BUTTONS; ++i) {
         auto button = Button{};
         button.text = std::to_string(i + 1);
@@ -21,7 +21,7 @@ BuildingBlockButtons makeBuildingBlockButtons(
     return buttons;
 }
 
-BuildModeButtons makeBuildModeButtons(
+SingleSelectButtons<BuildMode> makeBuildModeButtons(
     int screen_width, int screen_height
 ) {
     const auto BUTTON_WIDTH = 48;
@@ -30,7 +30,7 @@ BuildModeButtons makeBuildModeButtons(
 
     const auto COLOR = Color{ 64, 128, 255 };
 
-    auto buttons = BuildModeButtons{};
+    auto buttons = SingleSelectButtons<BuildMode>{};
 
     auto button_block = Button{};
     button_block.text = "Block";
@@ -53,4 +53,11 @@ BuildModeButtons makeBuildModeButtons(
     buttons[BuildMode::BUILD_SCENE] = button_scene;
 
     return buttons;
+}
+
+Gui makeGui(int screen_width, int screen_height) {
+    auto gui = Gui{};
+    gui.building_block_buttons = makeBuildingBlockButtons(screen_width, screen_height);
+    gui.build_mode_buttons = makeBuildModeButtons(screen_width, screen_height);
+    return gui;
 }
