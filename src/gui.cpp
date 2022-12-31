@@ -2,6 +2,16 @@
 
 #include "draw_gui.hpp"
 
+namespace {
+
+TextLabel makeFrameFrequencyTextLabel(int screen_width, int screen_height) {
+    auto label = TextLabel{};
+    label.color = WHITE;
+    label.x = screen_width - 8 * 5;
+    label.y = screen_height - 16;
+    return label;
+}
+
 SingleSelectButtons<BuildingBlock> makeBuildingBlockButtons(
     int screen_width, int screen_height
 ) {
@@ -57,10 +67,13 @@ SingleSelectButtons<BuildMode> makeBuildModeButtons(
     return buttons;
 }
 
+} // namespace
+
 Gui makeGui(int screen_width, int screen_height) {
     auto gui = Gui{};
     gui.building_block_buttons = makeBuildingBlockButtons(screen_width, screen_height);
     gui.build_mode_buttons = makeBuildModeButtons(screen_width, screen_height);
+    gui.frame_frequency = makeFrameFrequencyTextLabel(screen_width, screen_height);
     return gui;
 }
 
@@ -72,4 +85,5 @@ void handleMouseDown(SDL_Point mouse, Gui& gui) {
 void drawGui(Pixels& pixels, const Gui& gui) {
     drawButtons(pixels, gui.building_block_buttons);
     drawButtons(pixels, gui.build_mode_buttons);
+    drawTextLabel(pixels, gui.frame_frequency);
 }

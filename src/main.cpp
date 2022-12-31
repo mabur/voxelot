@@ -116,6 +116,7 @@ int main(int, char**)
                 world.active_building_block = getSelectedButton(gui.building_block_buttons);
             }
         }
+        gui.frame_frequency.text = std::to_string(world.timer.frequency()) + "Hz";
         draw(pixels, world);
         drawGui(pixels, gui);
         sdl.draw(pixels.data());

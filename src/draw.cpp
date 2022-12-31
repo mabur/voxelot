@@ -17,15 +17,6 @@
 
 namespace {
 
-void drawFrameFrequency(Pixels& pixels, const World& world) {
-    auto label = TextLabel{};
-    label.text = std::to_string(world.timer.frequency()) + "Hz";
-    label.color = WHITE;
-    label.x = static_cast<int>(pixels.width()) - 8 * 5;
-    label.y = static_cast<int>(pixels.height()) - 16;
-    drawTextLabel(pixels, label);
-}
-
 bool isBehindCamera(const Vector4d& v)
 {
     return v(2) <= 0;
@@ -110,5 +101,4 @@ void draw(Pixels& pixels, const World& world) {
     }
     rayCastVoxels(pixels, world);
     drawPoints(pixels, image_from_world, activeBlockMesh(world), packColor(GREEN));
-    drawFrameFrequency(pixels, world);
 }
