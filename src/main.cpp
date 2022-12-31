@@ -105,7 +105,7 @@ int main(int, char**)
             }
         }
         const auto input = sdl.getInput();
-        world.timer.update();
+
         if (control_mode == ControlMode::VOXEL_3D) {
             world.extrinsics = updateCamera(world.extrinsics, input);
             updateMap(world, input);
@@ -116,6 +116,8 @@ int main(int, char**)
                 world.active_building_block = getSelectedButton(gui.building_block_buttons);
             }
         }
+
+        world.timer.update();
         gui.frame_frequency.text = std::to_string(world.timer.frequency()) + "Hz";
 
         fill(pixels, packColor(GRAY128));
