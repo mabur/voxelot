@@ -17,6 +17,10 @@
 
 namespace {
 
+int roundDoubleToInt(double x) {
+    return static_cast<int>(std::round(x));
+}
+
 bool isBehindCamera(const Vector4d& v)
 {
     return v(2) <= 0;

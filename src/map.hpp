@@ -10,10 +10,6 @@
 
 const auto MAP_SIZE = 8;
 
-inline int roundDoubleToInt(double x) {
-    return static_cast<int>(std::round(x));
-}
-
 // x right
 // y up
 // z backward
