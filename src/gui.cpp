@@ -1,5 +1,7 @@
 #include "gui.hpp"
 
+#include "draw_gui.hpp"
+
 SingleSelectButtons<int> makeBuildingBlockButtons(
     int screen_width, int screen_height
 ) {
@@ -60,4 +62,9 @@ Gui makeGui(int screen_width, int screen_height) {
     gui.building_block_buttons = makeBuildingBlockButtons(screen_width, screen_height);
     gui.build_mode_buttons = makeBuildModeButtons(screen_width, screen_height);
     return gui;
+}
+
+void drawGui(Pixels& pixels, const Gui& gui) {
+    drawButtons(pixels, gui.building_block_buttons);
+    drawButtons(pixels, gui.build_mode_buttons);
 }

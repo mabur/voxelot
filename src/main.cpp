@@ -116,8 +116,7 @@ int main(int, char**)
             }
         }
         draw(pixels, world);
-        drawButtons(pixels, gui.building_block_buttons);
-        drawButtons(pixels, gui.build_mode_buttons);
+        drawGui(pixels, gui);
         sdl.draw(pixels.data());
         SDL_RenderPresent(sdl.renderer);
     }

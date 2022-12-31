@@ -1,6 +1,7 @@
 #pragma once
 
 #include "button.hpp"
+#include "pixels.hpp"
 
 enum class BuildMode { BUILD_BLOCK, BUILD_SCENE };
 
@@ -10,3 +11,5 @@ struct Gui {
 };
 
 Gui makeGui(int screen_width, int screen_height);
+
+void drawGui(Pixels& pixels, const Gui& gui);
