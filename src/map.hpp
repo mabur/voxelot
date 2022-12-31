@@ -1,10 +1,5 @@
 #pragma once
 
-#include <set>
-#include <string>
-#include <vector>
-
-#include "array3.hpp"
 #include "vector_space.hpp"
 #include "voxels.hpp"
 
