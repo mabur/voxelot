@@ -28,13 +28,14 @@ EDITOR
   - Or see if I would like to use magica voxel as editor,
     and focus on rendering.
 * Similar software:
-  - magica voxel
+  - Magica Voxel
     - ephtracy.github.io
     - https://www.patreon.com/magicavoxel
     - https://github.com/ephtracy
-  - bryce
-  - substance painter
-  - mario maker
+  - Bryce
+  - Substance Painter
+  - Mario Maker
+  - 3D Construction Kit II
 * Define a fixed set of architectural building blocks using cylinders and spheres and boolean operations.
 * Add procedural volumetric texures and noise: dirt, moss...
 * Technology for editor:
