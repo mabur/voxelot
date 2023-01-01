@@ -173,7 +173,7 @@ void rayCastVoxels(Pixels& pixels, const World& world) {
             const auto p_in_grid = normalizePosition(
                 grid_from_image * p_in_image
             );
-            const auto direction_in_grid = (p_in_grid - camera_in_grid).eval();
+            const auto direction_in_grid = normalizeDirection(p_in_grid - camera_in_grid);
             const auto intersection = castSingleRay(
                 camera_in_grid, direction_in_grid, map.voxels
             );
