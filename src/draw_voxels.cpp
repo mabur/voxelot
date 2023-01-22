@@ -32,8 +32,8 @@ Vector4d normalizeDirection(const Vector4d& v) {
 
 double startOffsetForAxis(double direction_in_grid, double p_in_grid) {
     return direction_in_grid > 0
-        ? floor(p_in_grid) - p_in_grid
-        : p_in_grid - ceil(p_in_grid);
+        ? ceil(p_in_grid) - p_in_grid
+        : p_in_grid - floor(p_in_grid);
 }
 
 enum class Direction {
@@ -61,6 +61,10 @@ Intersection castSingleRay(
     const Vector4d dy = direction_in_grid / std::abs(direction_in_grid.y());
     const Vector4d dz = direction_in_grid / std::abs(direction_in_grid.z());
 
+    const double dtx = dx.norm();
+    const double dty = dy.norm();
+    const double dtz = dz.norm();
+
     const double start_offset_x = startOffsetForAxis(
         direction_in_grid.x(), camera_in_grid.x()
     );
@@ -74,10 +78,6 @@ Intersection castSingleRay(
     Vector4d px = camera_in_grid + start_offset_x * dx;
     Vector4d py = camera_in_grid + start_offset_y * dy;
     Vector4d pz = camera_in_grid + start_offset_z * dz;
-
-    double dtx = dx.norm();
-    double dty = dy.norm();
-    double dtz = dz.norm();
 
     double tx = start_offset_x * dtx;
     double ty = start_offset_y * dty;
