@@ -20,9 +20,9 @@ void writeMap(const std::string& file_path, const Map& map) {
         exit(1);
     }
     file_csv << "type,x,y,z\n";
-    for (auto z = 0; z < MAP_SIZE; ++z) {
-        for (auto y = 0; y < MAP_SIZE; ++y) {
-            for (auto x = 0; x < MAP_SIZE; ++x) {
+    for (auto z = 0; z < map.depthGrid(); ++z) {
+        for (auto y = 0; y < map.heightGrid(); ++y) {
+            for (auto x = 0; x < map.widthGrid(); ++x) {
                 const auto block = map.voxels(x, y, z);
                 if (block) {
                     file_csv
