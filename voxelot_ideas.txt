@@ -36,6 +36,7 @@ EDITOR
   - Substance Painter
   - Mario Maker
   - 3D Construction Kit II
+  - Compound
 * Define a fixed set of architectural building blocks using cylinders and spheres and boolean operations.
 * Add procedural volumetric texures and noise: dirt, moss...
 * Technology for editor:
